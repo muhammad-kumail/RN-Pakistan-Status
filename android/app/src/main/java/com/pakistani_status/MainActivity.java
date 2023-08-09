@@ -4,6 +4,11 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
+// linear gradiant
+import com.BV.LinearGradient.LinearGradientPackage;
+
+// for gesturehandler
+// import com.pakistani_status.RNGestureHandlerPackage;
 
 public class MainActivity extends ReactActivity {
 

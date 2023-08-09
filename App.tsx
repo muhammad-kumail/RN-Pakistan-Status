@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Button } from 'react-native';
 import DrawerNavigator from './Navigation/DrawerNavigation';
 import 'react-native-gesture-handler';
+
 const App: React.FC = () => {
   return (
     // <Text>
