@@ -1,7 +1,7 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import Home from '../src/screens/Home';
+import Home from '../src/screens/Home/index';
 import About from '../src/screens/About';
 import CustomDrawerContent from './CustomDrawerContent';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
