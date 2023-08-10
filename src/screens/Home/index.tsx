@@ -34,34 +34,37 @@ const Home: React.FC<DrawerListProps> = ({ navigation }) => {
     const videos = async () => {
       try{
         const response = await getHomeVides();
-        if (response.data && response.data.videoContents) {
+        // const videos=response;
+
+        // if (response.data && response.data.videoContents) {
           SetVideoData(response.data.videoContents);
-          generateThumbnails(response.data.videoContents); 
-        }
+          console.log(response.data.videoContents)
+          // generateThumbnails(response.data.videoContents); 
+        // }
       } catch (error) {
         console.error('Error fetching video data:', error);
       }
       // console.log(response.data)
       // console.log(response.data.videoContents)
     };
-    const generateThumbnails = async (videos: VideoItem[]) => {
-      try {
-        const updatedData = await Promise.all(
-          videos.map(async (item) => {
-            const thumbnailUri = await createThumbnail({
-              url: Config.BASE_URL + item.mediaUrl,
-              timeStamp: 10000,
-            });
-            return thumbnailUri.path;
-          })
-        );
+    // const generateThumbnails = async (videos: VideoItem[]) => {
+    //   try {
+    //     const updatedData = await Promise.all(
+    //       videos.map(async (item) => {
+    //         const thumbnailUri = await createThumbnail({
+    //           url: Config.BASE_URL + item.mediaUrl,
+    //           timeStamp: 10000,
+    //         });
+    //         return thumbnailUri.path;
+    //       })
+    //     );
 
-        setThumbnails(updatedData);
-      } catch (error) {
-        console.error('Error generating thumbnails:', error);
-      }
+    //     setThumbnails(updatedData);
+    //   } catch (error) {
+    //     console.error('Error generating thumbnails:', error);
+    //   }
 
-    };
+    // };
 
     videos();
   }, []);
@@ -82,7 +85,7 @@ const Home: React.FC<DrawerListProps> = ({ navigation }) => {
         <TouchableWithoutFeedback
           onPress={() => clickPause(item.mediaUrl)}
         >
-          <Image source={{uri:Thumbnails[index]}}/>
+          {/* <Image source={{uri:Thumbnails[index]}}/> */}
           <Video
             source={{ uri: (Config.BASE_URL + item.mediaUrl) }}
             style={styles.video}
