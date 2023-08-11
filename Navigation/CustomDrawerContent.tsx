@@ -11,6 +11,7 @@ import {
 const CustomDrawerContent: React.FC<any> = ({ navigation }) => {
 
   return (
+
     <DrawerContentScrollView  >
       {/* <DrawerItemList> */}
       <ImageBackground source={images.background} style={{
@@ -22,18 +23,18 @@ const CustomDrawerContent: React.FC<any> = ({ navigation }) => {
         borderBottomLeftRadius={wp(6)}
         borderBottomRightRadius={wp(6)}
       >
-        <DrawerItem
+        <DrawerItem style={{marginLeft: wp(5)}}
 
           icon={() => (
             <Image
               source={images.logo}
-              style={{ width: wp(20), height: hp(11.5), marginTop: hp(12) }}
+              style={{ width: wp(15), height:wp(15), marginTop: hp(12) }}
             />
           )}
           label=""
           onPress={() => navigation.navigate("Home")}
         />
-        <Text style={{ color: 'white', fontSize: 18, fontWeight: "bold", marginLeft: wp(5) }}>Best Whatsapp Status</Text>
+        <Text style={{ color: 'white', fontSize: 18, fontWeight: "bold",marginLeft: wp(5) }}>Best Whatsapp Status</Text>
 
       </ImageBackground>
       <DrawerItem
@@ -101,7 +102,6 @@ const CustomDrawerContent: React.FC<any> = ({ navigation }) => {
       />
       {/* </DrawerItemList> */}
     </DrawerContentScrollView>
-
   );
 };
 

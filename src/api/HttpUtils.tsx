@@ -1,5 +1,5 @@
 
-const BASE_URL = 'https://467b-182-178-134-117.ngrok-free.app/api/v1/'; // local url
+const BASE_URL = 'https://b51e-182-178-134-117.ngrok-free.app/api/v1/'; // local url
 // const BASE_URL = 'https://pakprintwishes.com:3001/api/v2/'; // aws
 
 
