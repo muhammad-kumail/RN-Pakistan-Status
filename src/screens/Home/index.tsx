@@ -1,11 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
 import VideoPlayer from 'react-native-video-controls'
 import { getHomeVides } from '../../api/Httpservice';
 import Config from '../../utils/config';
 import images from '../../assets/images';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import Video from 'react-native-video';
 const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
 interface Item {
   id: string;
@@ -35,6 +37,7 @@ const Home = () => {
   const [focusedVideo, setFocusedVideo] = useState<string | null>(null);
   const flatListRef = useRef<FlatList<VideoItem>>(null);
   const [img, setImg] = useState(false)
+  const [videoLoading, setVideoLoading] = useState(true);
   useEffect(() => {
     const videos = async () => {
       try {
@@ -63,31 +66,50 @@ const Home = () => {
       console.log("Video Pressed");
     };
     return (
-      <TouchableOpacity
-        onPress={
-          () => {
-            console.log("okkk");
-            setCheck(!check);
-            setImg(!img)
-          }
+      <View style={styles.item}>
+        {img &&
+          <Image source={images.playBtn} style={styles.playBtn} />
         }
-        style={styles.item} key={index}>
         
-          {img ?
-            <Image source={images.playBtn} style={styles.playBtn} />
-            :
-            <Image source={images.pausebtn} style={styles.playBtn} />
+         {videoLoading &&
+            <ActivityIndicator
+                // animating
+                color={"grey"}
+                size="large"
+                style={{ flex: 1, position:"absolute", top:"50%", left:"45%" }}
+            />
+        }
+        <TouchableWithoutFeedback
+          onPress={
+            () => {
+              console.log("okkk");
+              setCheck(!check);
+              setImg(!img)
+            }
           }
-       
-        <VideoPlayer
-          source={{ uri: (Config.BASE_URL + item.mediaUrl) }}
-          style={styles.video}
-          playInBackground={false}
-          playWhenInactive={true}
-          paused={(visibleVideoIndex === index ? false : true) || (check)}
-          repeat={true}
-        />
-      </TouchableOpacity>
+        >
+          <Video
+            style={styles.video}
+            source={{ uri: (Config.BASE_URL + item.mediaUrl) }}
+            paused={(visibleVideoIndex === index ? false : true) || (check)}
+            repeat={true}
+            resizeMode={'cover'}
+            onLoad={() => setVideoLoading(true)}
+
+          />
+
+        </TouchableWithoutFeedback>
+      </View>
+
+
+      //   <Videoplayer
+      //     source={{ uri: (Config.BASE_URL + item.mediaUrl) }}
+      //     style={styles.video}
+      //     playInBackground={false}
+      //     playWhenInactive={true}
+      //     paused={(visibleVideoIndex === index ? false : true) || (check)}
+      //     repeat={true}
+      //   />
 
     );
   };
@@ -101,6 +123,7 @@ const Home = () => {
       showsVerticalScrollIndicator={false}
       onMomentumScrollEnd={(event) => {
         setCheck(false)
+        setImg(false)
         const yOffset = event.nativeEvent.contentOffset.y;
         const currentIndex = Math.round(yOffset / screenHeight);
         setVisibleVideoIndex(currentIndex)
@@ -118,18 +141,18 @@ const styles = StyleSheet.create({
     height: screenHeight,
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: 'lightgray',
-    backgroundColor:'red'
+    // borderBottomWidth: 1,
+    // borderColor: 'lightgray',
+    // backgroundColor: 'red'
   },
 
   video: {
-    height: "100%",
-    width: '100%',
+    height: screenHeight,
+    width: screenWidth,
     // zIndex:1
     // width: Dimensions.get('window').width,
     // height: correctHeight,
-    // backgroundColor:'red'
+    // backgroundColor: 'grey'
   },
   playBtn: {
     // flex:1,
@@ -139,8 +162,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // marginTop: hp(50),
     borderRadius: 50,
-    // height: 10,
-    // width: 30,
+    // height: wp(70),
+    // width: wp(70),
     // padding: 100
   }
 });

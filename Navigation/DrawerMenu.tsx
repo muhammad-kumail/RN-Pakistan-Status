@@ -18,7 +18,7 @@ const DrawerMenu: React.FC = () => {
             <Drawer.Screen name="Home" component={Home}
                 options={{ headerShown: false }}
             />
-            {/* <Drawer.Screen name="About" component={About} /> */}
+            <Drawer.Screen name="About" component={About} />
         </Drawer.Navigator>
     );
 };
