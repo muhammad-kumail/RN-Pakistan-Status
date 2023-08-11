@@ -7,54 +7,24 @@ import CustomDrawerContent from './CustomDrawerContent';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Splash from '../src/screens/Splash';
 import DrawerMenu from './DrawerMenu';
+import Splash2 from '../src/screens/Splash/Splash2';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator: React.FC = () => {
-  // const drawerContentOptions: DrawerContentOptions = {
-  //   activeTintColor: 'blue', // Change to your desired color
-  // };
-  // function StackNav() {
-  //   return (
-  //     <Stack.Navigator>
-  //       <Stack.Screen name="Splash"
-  //         options={{
-  //           headerShown: false
-  //         }}
-  //         component={Splash} />
-  //     </Stack.Navigator>
-  //   );
-  // }
-  // function DrawerNav()  {
-  //   return (
-  //     <Drawer.Navigator initialRouteName="Home"
-  //       drawerContent={props => <CustomDrawerContent {...props} />}
-  //     >
-  //       <Drawer.Screen name="Home" component={Home}
-  //         options={{ headerShown: false }}
-  //       />
-  //       <Drawer.Screen name="About" component={About} />
-  //     </Drawer.Navigator>
-  //   )
-  // }
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}}>
       <Stack.Screen
       name='splash'component={Splash} options={{ headerShown: false }}
       />
-       <Stack.Screen name="HamburgerMenu" component={DrawerMenu} />
+      <Stack.Screen
+      name='splash2'component={Splash2} options={{ headerShown: false }}
+      />
+       {/* <Stack.Screen name="HamburgerMenu" component={DrawerMenu} /> */}
       </Stack.Navigator>
-      {/* <DrawerMenu /> */}
-
-      {/* <Drawer.Navigator initialRouteName="Home"
-            drawerContent={props => <CustomDrawerContent {...props} />}
-        >
-            <Drawer.Screen name="Home" component={Home}
-                options={{ headerShown: false }}
-            />
-        </Drawer.Navigator> */}
+      
     </NavigationContainer>
   );
 };

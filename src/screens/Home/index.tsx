@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   },
 
   video: {
-    height: screenHeight,
+    height: '100%',
     width: screenWidth,
     // zIndex:1
     // width: Dimensions.get('window').width,

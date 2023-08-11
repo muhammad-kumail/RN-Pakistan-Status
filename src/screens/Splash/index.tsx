@@ -8,13 +8,13 @@ import {
 const Splash: React.FC<any> =  ({navigation}) => {
     useEffect(()=>{
         const timer = setTimeout(() => {
-            navigation.navigate('HamburgerMenu'); 
+            navigation.navigate('splash2'); 
           }, 2000);
       
           return () => clearTimeout(timer);
     })
   return (
-    <View style={{backgroundColor:'#25D366',height:hp(100),justifyContent:'center',alignItems:'center'}}>
+    <View style={{backgroundColor:'#595959',height:hp(100),justifyContent:'center',alignItems:'center'}}>
     <Image source={images.logo} style={{height:wp(30),width:wp(30)}}/>
     </View>
   )
