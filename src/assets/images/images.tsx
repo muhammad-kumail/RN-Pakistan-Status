@@ -14,7 +14,10 @@ const images = {
   Punjabi:require('./Punjabi.png'),
   Image:require('./Image.png'),
   Profile:require('./Profile.png'),
-  Sticker:require('./Sticker.png')
+  Sticker:require('./Sticker.png'),
+  whatsapp:require('./whatsapp.png'),
+  downarrow:require('./downarrow.png'),
+  back:require('./back.png')
 };
 
 export default images;
