@@ -17,7 +17,8 @@ const images = {
   Sticker:require('./Sticker.png'),
   whatsapp:require('./whatsapp.png'),
   downarrow:require('./downarrow.png'),
-  back:require('./back.png')
+  back:require('./back.png'),
+  Group:require('./Group.png')
 };
 
 export default images;

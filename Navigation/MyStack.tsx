@@ -8,6 +8,7 @@ import CustomDrawerContent from './CustomDrawerContent';
 import Home from '../src/screens/ForYouScreen/index';
 import About from '../src/screens/About';
 import BottomNavigation from './BottomNavigation';
+import EnglishPoetry from '../src/screens/EnglishPoetry';
 
 const Stack = createNativeStackNavigator();
 // const Drawer = createDrawerNavigator();
@@ -24,9 +25,10 @@ const Stack = createNativeStackNavigator();
 const MyStack: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Splash' screenOptions={{headerShown: false }}>
+      <Stack.Navigator initialRouteName='EnglishPoetry' screenOptions={{headerShown: false }}>
         <Stack.Screen name='Splash' component={Splash} />
         <Stack.Screen name='Splash2' component={Splash2} />
+        <Stack.Screen name="EnglishPoetry" component={EnglishPoetry}/>
         {/* <Stack.Screen name="DrawerMenu" component={DrawerMenu} /> */}
         <Stack.Screen name='Home' component={BottomNavigation} />
       </Stack.Navigator>
