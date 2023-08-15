@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         // padding: "3%"
     },
     threeContainers: {
-        flex:0.25,
+        flex:0.3,
         flexDirection: 'row',
         justifyContent: 'center',
         // flex:0.33,
@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
     },
     textSix: {
         color: 'white',
-        fontSize: wp(3.5),
-        fontFamily: fonts.regular,
+        fontSize: wp(3),
+        fontFamily: fonts.semiBold,
         // fontWeight:'bold'
         // backgroundColor:'red'
     },

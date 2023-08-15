@@ -6,6 +6,7 @@ import {
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import styles from './styles';
+import fonts from '../../assets/fonts/fonts';
 const Home: React.FC<any> = ({ navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1,backgroundColor:'red' }}>
@@ -13,12 +14,12 @@ const Home: React.FC<any> = ({ navigation }) => {
                 <View style={{ flex: 0.4}}>
 
                     <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: wp(2) }}>
-                        <Text style={{ color: 'white', fontSize: wp(5), }}>Home Page</Text>
+                        <Text style={{ color: 'white', fontSize: wp(5), fontFamily:fonts.medium }}>Home Page</Text>
                     </View>
                 </View>
                 <View style={styles.containers}>
                     <View style={{flex:0.1}}>
-                        <Text style={{ fontSize: wp(5), color: 'white', paddingLeft: wp(3.5), paddingBottom:wp(3)}}>All Categories</Text>
+                        <Text style={{ fontSize: wp(4), color: 'white', paddingLeft: wp(3.5), paddingBottom:wp(3), fontFamily:fonts.medium}}>All Categories</Text>
                     </View>
                     <View style={styles.threeContainers}>
                         <TouchableOpacity style={styles.singleContainerPink}>
@@ -56,7 +57,7 @@ const Home: React.FC<any> = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.threeContainers}>
+                    <View style={[styles.threeContainers , {marginBottom:wp(17.5)}]}>
                         <TouchableOpacity style={styles.singleContainerPink} onPress={()=> navigation.navigate('Stickers')}>
                         <View style={{flex:0.7}}>
                                 <Text style={styles.textSix}>Stickers</Text>
@@ -73,8 +74,8 @@ const Home: React.FC<any> = ({ navigation }) => {
                                 <Image style={styles.imagesSix} source={images.Profile} />
                             </View>
                         </TouchableOpacity>
-                    <View style={{flex:0.15}}></View>
                     </View>
+                    {/* <View style={{flex:0.2}}></View> */}
                 </View>
             </ImageBackground>
         </SafeAreaView>

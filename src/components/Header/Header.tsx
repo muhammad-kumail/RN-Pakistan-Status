@@ -4,6 +4,7 @@ import {
     heightPercentageToDP as hp,
     widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import fonts from '../../assets/fonts/fonts';
 // import colors from '../../assets/colors/colors';
 // import icons from '../../assets/icons/icons';
 
@@ -108,12 +109,14 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     title: {
-        fontSize: wp(8),
-        fontWeight: 'bold',
-        color: 'white'
+        fontSize: wp(5),
+        // fontWeight: 'bold',
+        color: 'white',
+        fontFamily:fonts.medium
+
     },
     icon: {
-        height: hp(4),
-        width: wp(8)
+        height: hp(2),
+        width: wp(5)
     }
 })

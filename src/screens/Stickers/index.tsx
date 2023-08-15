@@ -15,7 +15,7 @@ const Stickers: React.FC<any> = ({ navigation }) => {
     },
     {
       id: 2,
-      img: images.splash2Img,
+      img: images.catcover,
     },
     {
       id: 3,
@@ -23,25 +23,46 @@ const Stickers: React.FC<any> = ({ navigation }) => {
     },
     {
       id: 4,
-      img: images.splash2Img,
+      img: images.catcover,
     },
     {
       id: 5,
       img: images.splash2Img,
     },
+    {
+      id: 6,
+      img: images.catcover,
+    },
+    {
+      id: 7,
+      img: images.splash2Img,
+    },
+    {
+      id: 8,
+      img: images.catcover,
+    },
+    {
+      id: 9,
+      img: images.splash2Img,
+    },
+    {
+      id: 10,
+      img: images.catcover,
+    },
+    {
+      id: 11,
+      img: images.splash2Img,
+    },
   ];
 
   const numColumns = 2;
-  const screenWidth = Dimensions.get('window').width;
-  // const cardWidth = screenWidth / numColumns;
-  // const cardHeight = cardWidth * (4 / 3); // Assuming a 4:3 aspect ratio for cards
-
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: '#121212'}}>
       <Header 
         title="Stickers"
         leftIcon={images.back}  
+        leftIconPress={()=> navigation.goBack()}
       />
       <FlatList
         data={data}
@@ -50,16 +71,16 @@ const Stickers: React.FC<any> = ({ navigation }) => {
         contentContainerStyle={styles.contentContainer}
         renderItem={({ item }) => {
           return (
-            <View style={[styles.card, { width: wp(45), height: hp(20), marginLeft:wp(2) }]}>
+            <View style={[styles.card, { width: wp(45), height: hp(20), marginLeft:wp(1) }]}>
               <View style={{height:hp(16)}}>
                 <Image source={item.img} style={styles.image} />
               </View>
               <View style={{height:hp(4), backgroundColor:'red', flexDirection:'row'}}>
                 <TouchableOpacity style={{flex:0.5 ,alignItems:'center', justifyContent:'center',}} onPress={()=> alert(`download press , ${item?.id}`)}>
-                  <Image source={images.downarrow}  style={{height:hp(2.5), width:wp(6)}} resizeMode='contain'/>
+                  <Image source={images.downarrow}  style={{height:hp(2), width:wp(4  )}} resizeMode='contain'/>
                 </TouchableOpacity>
                 <TouchableOpacity style={{flex:0.5 ,alignItems:'center', justifyContent:'center',}} onPress={()=> alert(`whatapp press , ${item?.id}` , )}>
-                  <Image source={images.whatsapp}  style={{height:hp(2.5), width:wp(6)}} resizeMode='contain'/>
+                  <Image source={images.whatsapp}  style={{height:hp(2), width:wp(4 )}} resizeMode='contain'/>
                 </TouchableOpacity>
               </View>
             </View>
@@ -74,9 +95,7 @@ export default Stickers;
 
 const styles = StyleSheet.create({
   contentContainer: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    alignItems:'center',
   },
   card: {
     backgroundColor: '#333',
