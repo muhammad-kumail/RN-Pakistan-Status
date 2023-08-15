@@ -8,7 +8,13 @@ const images = {
   homeIcon:require('./HomeIcon.png'),
   forYouIcon:require('./forYouIcon.png'),
   audioIcon:require('./AudioIcon.png'),
-  homeBack:require('./HomeBackGround.png')
+  homeBack:require('./HomeBackGround.png'),
+  English: require("./English.png"),
+  Urdu: require('./Urdu.png'),
+  Punjabi:require('./Punjabi.png'),
+  Image:require('./Image.png'),
+  Profile:require('./Profile.png'),
+  Sticker:require('./Sticker.png')
 };
 
 export default images;

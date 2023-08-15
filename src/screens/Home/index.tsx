@@ -8,48 +8,72 @@ import {
 import styles from './styles';
 const Home: React.FC<any> = ({ navigation }) => {
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+        <SafeAreaView style={{ flex: 1,backgroundColor:'red' }}>
             <ImageBackground source={images.homeBack} style={{ height: hp(100), width: wp(100) }} >
-                <View style={{flex:0.4}}>
+                <View style={{ flex: 0.4}}>
 
-                <TouchableOpacity>
-                    <Text style={{ color: 'white', fontSize: 12 }}> Go</Text>
-                </TouchableOpacity>
+                    <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: wp(2) }}>
+                        <Text style={{ color: 'white', fontSize: wp(5), }}>Home Page</Text>
+                    </View>
                 </View>
+                <View style={styles.containers}>
+                    <Text style={{ fontSize: wp(5), color: 'white', paddingLeft: wp(3.5), paddingBottom:wp(3)}}>All Categories</Text>
+                    <View style={styles.threeContainers}>
+                        <View style={styles.singleContainerPink}>
+                            <View style={{flex:0.7}}>
+                                <Text style={styles.textSix}>English Poetry</Text>
+                            </View>
+                            <View style={{flex:0.3, justifyContent:'flex-end'}}>
+                                <Image style={styles.imagesSix} source={images.English} />
+                            </View>
+                        </View>
+                        <View style={styles.singleContainerPurple}>
+                        <View style={{flex:0.7}}>
+                                <Text style={styles.textSix}>Urdu Poetry</Text>
+                            </View>
+                            <View style={{flex:0.3, justifyContent:'flex-end'}}>
+                                <Image style={styles.imagesSix} source={images.Urdu} />
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.threeContainers}>
+                        <View style={styles.singleContainerPurple}>
+                        <View style={{flex:0.7}}>
+                                <Text style={styles.textSix}>Punjabi Poetry</Text>
+                            </View>
+                            <View style={{flex:0.3, justifyContent:'flex-end'}}>
+                                <Image style={styles.imagesSix} source={images.Punjabi} />
+                            </View>
+                        </View>
+                        <View style={styles.singleContainerPink}>
+                        <View style={{flex:0.7}}>
+                                <Text style={styles.textSix}>Poetry Images</Text>
+                            </View>
+                            <View style={{flex:0.3, justifyContent:'flex-end'}}>
+                                <Image style={styles.imagesSix} source={images.Image} />
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.threeContainers}>
+                        <View style={styles.singleContainerPink}>
+                        <View style={{flex:0.7}}>
+                                <Text style={styles.textSix}>Stickers</Text>
+                            </View>
+                            <View style={{flex:0.3, justifyContent:'flex-end'}}>
+                                <Image style={styles.imagesSix} source={images.Sticker} />
+                            </View>
+                        </View>
+                        <View style={styles.singleContainerPurple}>
+                        <View style={{flex:0.7}}>
+                                <Text style={styles.textSix}>Profile</Text>
+                            </View>
+                            <View style={{flex:0.3, justifyContent:'flex-end'}}>
+                                <Image style={styles.imagesSix} source={images.Profile} />
+                            </View>
+                        </View>
 
-                {/* <View style={styles.containers}>
-                    <View style={styles.threeContainers}>
-                        <View style={{backgroundColor:'grey'}}>
-                            <Text>English Poetry</Text>
-                            <Image style={styles.imagesSix} source={images.logo} />
-                        </View>
-                        <View>
-                            <Text>English Poetry</Text>
-                            <Image style={styles.imagesSix}  source={images.logo} />
-                        </View>
                     </View>
-                    <View style={styles.threeContainers}>
-                        <View>
-                            <Text>English Poetry</Text>
-                            <Image style={styles.imagesSix}  source={images.logo} />
-                        </View>
-                        <View>
-                            <Text>English Poetry</Text>
-                            <Image style={styles.imagesSix}  source={images.logo} />
-                        </View>
-                    </View>
-                    <View style={styles.threeContainers}>
-                        <View>
-                            <Text>English Poetry</Text>
-                            <Image style={styles.imagesSix}  source={images.logo} />
-                        </View>
-                        <View>
-                            <Text>English Poetry</Text>
-                            <Image style={styles.imagesSix}  source={images.logo} />
-                        </View>
-
-                    </View>
-                </View> */}
+                </View>
             </ImageBackground>
         </SafeAreaView>
     )
