@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, SafeAreaView, ImageBackground } from 'react-native'
 import React, { useEffect } from 'react'
 import images from '../../assets/images';
 import {
@@ -14,12 +14,13 @@ const Splash2: React.FC<any> = ({ navigation }) => {
     //       return () => clearTimeout(timer);
     // })
     return (
-        <View>
-            <Image source={images.splash2Img} style={{ height: hp(100), width: wp(100) }} />
-            <TouchableOpacity>
-                <Text>Lets Go</Text>
-            </TouchableOpacity>
-        </View>
+        <SafeAreaView style={{flex:1}}>
+            <ImageBackground source={images.splash2Img} style={{ height: hp(100), width: wp(100) }} >
+                <TouchableOpacity>
+                    <Text style={{color:'white', fontSize:12}}>Lets Go</Text>
+                </TouchableOpacity>
+            </ImageBackground>
+        </SafeAreaView>
     )
 }
 
