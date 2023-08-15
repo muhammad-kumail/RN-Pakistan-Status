@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         // padding: "3%"
     },
     threeContainers: {
+        flex:0.25,
         flexDirection: 'row',
         justifyContent: 'center',
         // flex:0.33,
@@ -22,12 +23,12 @@ const styles = StyleSheet.create({
         // width:hp(10),
         // backgroundColor:'red',
         // marginHorizontal:10
-        bottom:wp(1)
+        // bottom:wp(1)
     },
     singleContainerPink: {
         padding: wp(2),
         width: wp(44),
-        height: wp(22),
+        // height: wp(22),
         backgroundColor: '#B036C1',
         marginHorizontal: wp(1.5),
         marginVertical: wp(1.5),
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     singleContainerPurple: {
         padding: wp(2),
         width: wp(44),
-        height: wp(22),
+        // height: wp(22),
         backgroundColor: '#9353C3',
         marginHorizontal: wp(1.5),
         marginVertical: wp(1.5),
