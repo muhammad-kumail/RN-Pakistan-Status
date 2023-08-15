@@ -8,7 +8,10 @@ const images = {
   homeIcon:require('./HomeIcon.png'),
   forYouIcon:require('./forYouIcon.png'),
   audioIcon:require('./AudioIcon.png'),
-  homeBack:require('./HomeBackGround.png')
+  homeBack:require('./HomeBackGround.png'),
+  whatsapp:require('./whatsapp.png'),
+  downarrow:require('./downarrow.png'),
+  back:require('./back.png')
 };
 
 export default images;
