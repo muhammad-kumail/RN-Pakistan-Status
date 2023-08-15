@@ -45,7 +45,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ route }) => {
        
             screenOptions={({ route }) => ({
             
-                tabBarIcon: ({ size, color }) => {
+                tabBarIcon: ({ focused, size, color }) => {
                     let iconName: string = '';
                     let icon: any;
                     // let icon:'';
@@ -62,12 +62,17 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ route }) => {
                     return (
                         <View style={{ flexDirection: 'column',alignItems:'center', width:wp(10), height:wp(5) }}>
                             <View>
-                                <Image style={{ height: wp(5), width: wp(5), alignSelf: 'center' }} source={icon} />
+                                <Image style={{ height: wp(5), width: wp(5), alignSelf: 'center', resizeMode:'contain' }} source={icon} />
                             </View>
                             <View>
-                                <Text style={{ color: 'white', fontSize: 15 }}>{iconName}</Text>
+                                <Text style={{ color: 'white', fontSize: wp(2) }}>{iconName}</Text>
+
+                                {focused ?
+                                <View style={{height:wp(0.5), backgroundColor:'white'}}></View>
+                                    : null    }
                             </View>
-                        </View>);
+                        </View>
+                        );
                 },
                 tabBarActiveTintColor: 'green',
                 tabBarInactiveTintColor: 'gray',
@@ -76,12 +81,12 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ route }) => {
                 tabBarStyle: {
                     borderColor:'#B036C1',
                     position:'absolute',
-                    bottom:10,
+                    bottom:wp(3),
                     marginHorizontal:wp(4),                    
                     // paddingVertical: 2,
                     // justifyContent:'center',
                     // zIndex:1,
-                    height: hp(7),
+                    height: wp(13),
                     backgroundColor:'#B036C1',
                     borderRadius:50,
 

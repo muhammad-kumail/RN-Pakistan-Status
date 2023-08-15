@@ -24,9 +24,9 @@ const Stack = createNativeStackNavigator();
 const MyStack: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home' screenOptions={{headerShown: false }}>
-        {/* <Stack.Screen name='Splash' component={Splash} />
-        <Stack.Screen name='Splash2' component={Splash2} /> */}
+      <Stack.Navigator initialRouteName='Splash' screenOptions={{headerShown: false }}>
+        <Stack.Screen name='Splash' component={Splash} />
+        <Stack.Screen name='Splash2' component={Splash2} />
         {/* <Stack.Screen name="DrawerMenu" component={DrawerMenu} /> */}
         <Stack.Screen name='Home' component={BottomNavigation} />
       </Stack.Navigator>
