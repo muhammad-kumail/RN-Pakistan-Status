@@ -1,27 +1,25 @@
-import { View, Text, Image, TouchableOpacity, SafeAreaView, ImageBackground } from 'react-native'
-import React, { useEffect } from 'react'
-import images from '../../assets/images/images';
+import { StyleSheet } from 'react-native';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-const Styles: React.FC<any> = ({ navigation }) => {
-    // useEffect(()=>{
-    //     const timer = setTimeout(() => {
-    //         navigation.navigate('HamburgerMenu'); 
-    //       }, 2000);
+const styles = StyleSheet.create({
+    containers:{
+        // backgroundColor:'red',
+        // zIndex:1,
+        flex:0.6,
+        padding:"3%"
+    },
+    threeContainers:{
+        flexDirection:'row',
+        // height:hp(10),
+        // width:hp(10),
+        backgroundColor:'red'
+    },
+    imagesSix:{
+        height:wp(30),
+        width:wp(30)
+    }
+});
 
-    //       return () => clearTimeout(timer);
-    // })
-    return (
-        <SafeAreaView style={{flex:1}}>
-            <ImageBackground source={images.splash2Img} style={{ height: hp(100), width: wp(100) }} >
-                <TouchableOpacity>
-                    <Text style={{color:'white', fontSize:12}}>Lets Go</Text>
-                </TouchableOpacity>
-            </ImageBackground>
-        </SafeAreaView>
-    )
-}
-
-export default Styles
+export default styles;

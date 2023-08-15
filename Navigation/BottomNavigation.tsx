@@ -42,19 +42,14 @@ interface route {
 const BottomNavigation: React.FC<BottomNavigationProps> = ({ route }) => {
     return (
         <Tab.Navigator
-        tabBarOptions={{
-            style: {
-                backgroundColor: 'white',
-                height: 64, // Set your desired height here
-              },
-        }}
+       
             screenOptions={({ route }) => ({
             
                 tabBarIcon: ({ size, color }) => {
                     let iconName: string = '';
                     let icon: any;
                     // let icon:'';
-                    if (route.name === 'Home') {
+                    if (route.name === 'Homee') {
                         icon = images.homeIcon;
                         iconName = 'Home';
                     } else if (route.name === 'ForYou') {
@@ -65,30 +60,36 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ route }) => {
                         iconName = 'Audio';
                     }
                     return (
-                        <View style={{ flexDirection: 'column', }}>
+                        <View style={{ flexDirection: 'column',alignItems:'center', width:wp(10), height:wp(5) }}>
                             <View>
                                 <Image style={{ height: wp(5), width: wp(5), alignSelf: 'center' }} source={icon} />
                             </View>
                             <View>
-                                <Text style={{ color: 'black', fontSize: 12 }}>{iconName}</Text>
+                                <Text style={{ color: 'white', fontSize: 15 }}>{iconName}</Text>
                             </View>
                         </View>);
                 },
                 tabBarActiveTintColor: 'green',
                 tabBarInactiveTintColor: 'gray',
-                // tabBarActiveBackgroundColor: '#B036C1',
-                // tabBarInactiveBackgroundColor:'#B036C1',
                 headerShown: false,
+                tabBarLabel:'',
                 tabBarStyle: {
-                    paddingVertical: 2,
-                    height: hp(10),
+                    borderColor:'#B036C1',
+                    position:'absolute',
+                    bottom:10,
+                    marginHorizontal:wp(4),                    
+                    // paddingVertical: 2,
+                    // justifyContent:'center',
+                    // zIndex:1,
+                    height: hp(7),
                     backgroundColor:'#B036C1',
-                    borderRadius:50
+                    borderRadius:50,
+
                   }
 
             })}
         >
-            <Tab.Screen name="Home" component={Home} />
+            <Tab.Screen name="Homee" component={Home} />
             <Tab.Screen name="ForYou" component={ForYou} />
             <Tab.Screen name="Audio" component={Home} />
 
