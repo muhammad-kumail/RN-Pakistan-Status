@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity, SafeAreaView, ImageBackground } from 'react-native'
 import React, { useEffect } from 'react'
-import images from '../../assets/images';
+import images from '../../assets/images/images';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,

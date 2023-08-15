@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Button, Image, ImageBackground } from 'react-native';
 import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer'
 // import { Image } from 'react-native-reanimated/lib/typescript/Animated';
-import images from '../src/assets/images';
+import images from '../src/assets/images/images';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
