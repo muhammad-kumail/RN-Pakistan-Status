@@ -20,6 +20,7 @@ const images = {
   back:require('./back.png'),
   catcover:require('./catcover.png'),
   download:require('./download.png'),
+  Group:require('./Group.png')
 };
 
 export default images;

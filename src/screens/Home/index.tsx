@@ -12,7 +12,6 @@ const Home: React.FC<any> = ({ navigation }) => {
         <SafeAreaView style={{ flex: 1,backgroundColor:'red' }}>
             <ImageBackground source={images.homeBack} style={{ height: hp(100), width: wp(100) }} >
                 <View style={{ flex: 0.4}}>
-
                     <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: wp(2) }}>
                         <Text style={{ color: 'white', fontSize: wp(5), fontFamily:fonts.medium }}>Home Page</Text>
                     </View>
