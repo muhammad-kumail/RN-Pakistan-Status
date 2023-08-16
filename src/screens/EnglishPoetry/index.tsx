@@ -8,8 +8,9 @@ import {
 import styles from './styles';
 import PoetryTypes from './TopList';
 import PoetryListEnglish from './PoetryListEnglish';
+import Header from '../../components/Header/Header';
 
-const EnglishPoetry: React.FC = () => {
+const EnglishPoetry: React.FC<any> = ({ navigation }) => {
     const types = [
         { id: '1', title: 'Sad Poetry' },
         { id: '2', title: 'Birthday Poetry' },
@@ -24,7 +25,17 @@ const EnglishPoetry: React.FC = () => {
     ];
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#121212' }}>
+            <Header
+                title={'English Poetry'}
+                leftIcon={images.back}
+                // rightIcon={icons.notification}
+                leftIconPress={() => {
+                    navigation.goBack();
+                }}
+
+            // onPressLogo={() => alert('Bell Press')}
+            />
             <View style={{ flex: 0.05 }}>
                 <PoetryTypes data={types} />
             </View>

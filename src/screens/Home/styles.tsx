@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         // padding: "3%"
     },
     threeContainers: {
-        flex:0.3,
+        flex:0.22,
         flexDirection: 'row',
         justifyContent: 'center',
         // flex:0.33,
