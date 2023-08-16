@@ -17,10 +17,11 @@ const styles = StyleSheet.create({
     topList: {
         borderRadius: wp(5),
         borderWidth: wp(0.2),
-        backgroundColor: '#121212',
+        // backgroundColor: '#121212',
         marginHorizontal: wp(1),
         borderColor: '#FFFFFF',
-        paddingHorizontal: wp(5)
+        paddingHorizontal: wp(3),
+        paddingVertical:wp(0.5),
     },
     poetrylists:
     {

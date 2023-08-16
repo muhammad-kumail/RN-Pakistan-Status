@@ -97,15 +97,17 @@ const styles = StyleSheet.create({
         paddingVertical: Platform.OS === 'ios' ? wp(2) : wp(4),
     },
     leftIconBox: {
-        flex: 0.3,
+        flex: 0.15,
+        // alignItems: 'center'
     },
     rightIconBox: {
-        flex: 0.3,
-        justifyContent: 'flex-end',
-        flexDirection: 'row',
+        flex: 0.15,
+        alignItems: 'center'
+        // justifyContent: 'flex-end',
+        // flexDirection: 'row',
     },
     centerBox: {
-        flex: 0.4,
+        flex: 0.7,
         alignItems: 'center'
     },
     title: {
@@ -117,6 +119,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         height: hp(2),
-        width: wp(5)
+        width: wp(5),
+        paddingVertical:wp(3),
     }
 })

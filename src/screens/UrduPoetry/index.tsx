@@ -6,8 +6,8 @@ import {
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import styles from './styles';
-import PoetryTypes from '../EnglishPoetry/TopList';
-import PoetryListUrdu from './PoetryListUrdu';
+import PoetryTypes from '../../components/TopList/TopList';
+import PoetryListUrdu from '../../components/UrduPoetry/PoetryListUrdu';
 import Header from '../../components/Header/Header';
 
 const UrduPoetry: React.FC<any> = ({navigation}) => {
