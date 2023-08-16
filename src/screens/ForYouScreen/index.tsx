@@ -82,9 +82,21 @@ const ForYou = () => {
                 // animating
                 color={"grey"}
                 size="large"
-                style={{ flex: 1, position:"absolute", top:"50%", left:"45%" }}
+                style={{ flex: 1, zIndex:1, position:"absolute", top:"50%", left:"45%" }}
             />
         }
+        <TouchableOpacity style={styles.downloadIcon}>
+          <Image source={images.download} style={styles.iconSize} tintColor="#FFFFFF" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.whatsapp}>
+          <Image source={images.whatsapp} style={styles.iconSize} tintColor="#FFFFFF" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.share}>
+          <Image source={images.share} style={styles.iconSize} tintColor="#FFFFFF" />
+        </TouchableOpacity>
+
         <TouchableWithoutFeedback
           onPress={
             () => {
@@ -100,7 +112,8 @@ const ForYou = () => {
             paused={(visibleVideoIndex === index ? false : true) || (check)}
             repeat={true}
             resizeMode={'contain'}
-            onLoad={() => setVideoLoading(true)}
+            onLoad={(data) => {setVideoLoading(!data.canPlayFastForward)
+             }}
 
           />
 
@@ -183,6 +196,34 @@ const styles = StyleSheet.create({
     color:'white',
     fontFamily:fonts.medium,
     fontSize: 20,
+  },
+  downloadIcon: {
+    zIndex:1,
+    position:'absolute',
+    right:wp(5),
+    bottom:hp(25),
+    // height:wp(6),
+    // width:wp(6)
+  },
+  whatsapp:  {
+    zIndex:1,
+    position:'absolute',
+    right:wp(5),
+    bottom:hp(35),
+    // height:wp(6),
+    // width:wp(6)
+  },
+  share:  {
+    zIndex:1,
+    position:'absolute',
+    right:wp(5),
+    bottom:hp(15),
+    // height:wp(6),
+    // width:wp(6)
+  },
+  iconSize: {
+    width:wp(6), 
+    height:wp(6)
   }
 });
 

@@ -20,7 +20,8 @@ const images = {
   back:require('./back.png'),
   catcover:require('./catcover.png'),
   download:require('./download.png'),
-  Group:require('./Group.png')
+  Group:require('./Group.png'),
+  share:require('./share.png'),
 };
 
 export default images;
