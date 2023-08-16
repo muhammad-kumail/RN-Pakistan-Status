@@ -6,6 +6,7 @@ import {
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import styles from './styles';
+// import { I18nManager } from 'react-native';
 interface Item {
     id: string;
     Text: string;
@@ -16,7 +17,8 @@ interface HorizontalFlatListProps {
     data: Item[];
 }
 
-const PoetryList: React.FC<HorizontalFlatListProps> = ({ data }) => {
+const PoetryListEnglish: React.FC<HorizontalFlatListProps> = ({ data }) => {
+    // I18nManager.forceRTL(true);
     const renderItem = ({ item }: { item: Item }) => (
         <View style={{ backgroundColor: 'black' }}>
             <TouchableOpacity style={styles.poetrylists}>
@@ -44,4 +46,4 @@ const PoetryList: React.FC<HorizontalFlatListProps> = ({ data }) => {
     )
 }
 
-export default PoetryList
+export default PoetryListEnglish

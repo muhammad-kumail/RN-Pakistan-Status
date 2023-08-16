@@ -7,9 +7,9 @@ import {
 } from 'react-native-responsive-screen';
 import styles from './styles';
 import PoetryTypes from './TopList';
-import PoetryList from './PoetryList';
+import PoetryListEnglish from './PoetryListEnglish';
 
-const Poetry: React.FC = () => {
+const EnglishPoetry: React.FC = () => {
     const types = [
         { id: '1', title: 'Sad Poetry' },
         { id: '2', title: 'Birthday Poetry' },
@@ -29,10 +29,10 @@ const Poetry: React.FC = () => {
                 <PoetryTypes data={types} />
             </View>
             <View style={{ flex: 0.95 }}>
-                <PoetryList data={data} />
+                <PoetryListEnglish data={data} />
             </View>
         </SafeAreaView>
     )
 }
 
-export default Poetry
+export default EnglishPoetry

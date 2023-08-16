@@ -9,6 +9,8 @@ import Home from '../src/screens/ForYouScreen/index';
 import About from '../src/screens/About';
 import BottomNavigation from './BottomNavigation';
 import EnglishPoetry from '../src/screens/EnglishPoetry';
+import UrduPoetry from '../src/screens/UrduPoetry';
+import PunjabiPoetry from '../src/screens/PunjabiPoetry';
 
 const Stack = createNativeStackNavigator();
 // const Drawer = createDrawerNavigator();
@@ -25,10 +27,12 @@ const Stack = createNativeStackNavigator();
 const MyStack: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='EnglishPoetry' screenOptions={{headerShown: false }}>
+      <Stack.Navigator initialRouteName='Splash' screenOptions={{headerShown: false }}>
         <Stack.Screen name='Splash' component={Splash} />
         <Stack.Screen name='Splash2' component={Splash2} />
         <Stack.Screen name="EnglishPoetry" component={EnglishPoetry}/>
+        <Stack.Screen name="UrduPoetry" component={UrduPoetry}/>
+        <Stack.Screen name="PunjabiPoetry" component={PunjabiPoetry}/>
         {/* <Stack.Screen name="DrawerMenu" component={DrawerMenu} /> */}
         <Stack.Screen name='Home' component={BottomNavigation} />
       </Stack.Navigator>
