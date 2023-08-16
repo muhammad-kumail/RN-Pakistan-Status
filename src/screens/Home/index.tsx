@@ -9,7 +9,7 @@ import styles from './styles';
 import fonts from '../../assets/fonts/fonts';
 const Home: React.FC<any> = ({ navigation }) => {
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'red' }}>
+        <SafeAreaView style={{ flex: 1 }}>
             <ImageBackground source={images.homeBack} style={{ height: hp(100), width: wp(100) }} >
                 <View style={{ flex: 0.4 }}>
                     <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: wp(2) }}>
