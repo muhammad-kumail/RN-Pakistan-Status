@@ -19,11 +19,11 @@ const Stickers: React.FC<any> = ({ navigation }) => {
     },
     {
       id: 3,
-      img: images.splash2Img,
+      img: images.catcover,
     },
     {
       id: 4,
-      img: images.catcover,
+      img: images.splash2Img,
     },
     {
       id: 5,
@@ -35,11 +35,11 @@ const Stickers: React.FC<any> = ({ navigation }) => {
     },
     {
       id: 7,
-      img: images.splash2Img,
+      img: images.catcover,
     },
     {
       id: 8,
-      img: images.catcover,
+      img: images.splash2Img,
     },
     {
       id: 9,
@@ -51,7 +51,7 @@ const Stickers: React.FC<any> = ({ navigation }) => {
     },
     {
       id: 11,
-      img: images.splash2Img,
+      img: images.catcover,
     },
   ];
 

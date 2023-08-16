@@ -66,7 +66,7 @@ const Home: React.FC<any> = ({ navigation }) => {
                                 <Image style={styles.imagesSix} source={images.Sticker} />
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.singleContainerPurple}>
+                        <TouchableOpacity style={styles.singleContainerPurple} onPress={()=> navigation.navigate('ProfileImages')}>
                         <View style={{flex:0.7}}>
                                 <Text style={styles.textSix}>Profile</Text>
                             </View>
