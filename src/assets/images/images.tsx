@@ -18,7 +18,9 @@ const images = {
   whatsapp:require('./whatsapp.png'),
   downarrow:require('./downarrow.png'),
   back:require('./back.png'),
-  catcover:require('./catcover.png')
+  catcover:require('./catcover.png'),
+  download:require('./download.png'),
+  Group:require('./Group.png')
 };
 
 export default images;

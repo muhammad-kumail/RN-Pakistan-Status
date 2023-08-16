@@ -12,7 +12,6 @@ const Home: React.FC<any> = ({ navigation }) => {
         <SafeAreaView style={{ flex: 1,backgroundColor:'red' }}>
             <ImageBackground source={images.homeBack} style={{ height: hp(100), width: wp(100) }} >
                 <View style={{ flex: 0.4}}>
-
                     <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: wp(2) }}>
                         <Text style={{ color: 'white', fontSize: wp(5), fontFamily:fonts.medium }}>Home Page</Text>
                     </View>
@@ -66,7 +65,7 @@ const Home: React.FC<any> = ({ navigation }) => {
                                 <Image style={styles.imagesSix} source={images.Sticker} />
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.singleContainerPurple}>
+                        <TouchableOpacity style={styles.singleContainerPurple} onPress={()=> navigation.navigate('ProfileImages')}>
                         <View style={{flex:0.7}}>
                                 <Text style={styles.textSix}>Profile</Text>
                             </View>
