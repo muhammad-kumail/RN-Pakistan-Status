@@ -1,11 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, SafeAreaView } from 'react-native';
 // import VideoPlayer from 'react-native-video-controls'
 import { getHomeVides } from '../../api/Httpservice';
 import Config from '../../utils/config';
 import images from '../../assets/images/images';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Video from 'react-native-video';
+import fonts from '../../assets/fonts/fonts';
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
@@ -68,7 +69,12 @@ const ForYou = () => {
     return (
       <View style={styles.item}>
         {img &&
-          <Image source={images.playBtn} style={styles.playBtn} />
+          <TouchableOpacity style={{zIndex:1}} onPress={() => {
+            setCheck(!check);
+            setImg(!img)
+          }}>
+            <Image source={images.playBtn} style={styles.playBtn} />
+          </TouchableOpacity>
         }
         
          {videoLoading &&
@@ -93,7 +99,7 @@ const ForYou = () => {
             source={{ uri: (Config.BASE_URL + item.mediaUrl) }}
             paused={(visibleVideoIndex === index ? false : true) || (check)}
             repeat={true}
-            resizeMode={'cover'}
+            resizeMode={'contain'}
             onLoad={() => setVideoLoading(true)}
 
           />
@@ -114,24 +120,25 @@ const ForYou = () => {
     );
   };
   return (
-    <FlatList
-      ref={flatListRef}
-      data={videoData}
-      renderItem={renderItem}
-      keyExtractor={(item) => item._id}
-      pagingEnabled
-      showsVerticalScrollIndicator={false}
-      onMomentumScrollEnd={(event) => {
-        setCheck(false)
-        setImg(false)
-        const yOffset = event.nativeEvent.contentOffset.y;
-        const currentIndex = Math.round(yOffset / screenHeight);
-        setVisibleVideoIndex(currentIndex)
-        flatListRef.current?.scrollToIndex({ animated: true, index: currentIndex });
-
-      }}
-
-    />
+    <SafeAreaView>
+        <Text style={styles.forYouText}>For You</Text>
+      <FlatList
+        ref={flatListRef}
+        data={videoData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item._id}
+        pagingEnabled
+        showsVerticalScrollIndicator={false}
+        onMomentumScrollEnd={(event) => {
+          setCheck(false)
+          setImg(false)
+          const yOffset = event.nativeEvent.contentOffset.y;
+          const currentIndex = Math.round(yOffset / screenHeight);
+          setVisibleVideoIndex(currentIndex)
+          flatListRef.current?.scrollToIndex({ animated: true, index: currentIndex });
+        }}
+      />
+    </SafeAreaView>
   );
 };
 
@@ -140,7 +147,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     height: screenHeight,
     justifyContent: 'center',
-    alignItems: 'center',
+    // alignItems: 'center',
     // borderBottomWidth: 1,
     // borderColor: 'lightgray',
     // backgroundColor: 'red'
@@ -152,19 +159,30 @@ const styles = StyleSheet.create({
     // zIndex:1
     // width: Dimensions.get('window').width,
     // height: correctHeight,
-    // backgroundColor: 'grey'
+    backgroundColor: '#121212'
   },
   playBtn: {
     // flex:1,
     // backgroundColor: 'red',
     zIndex: 1,
     position: 'absolute',
-    alignItems: 'center',
-    // marginTop: hp(50),
-    borderRadius: 50,
-    // height: wp(70),
-    // width: wp(70),
+    top:0,
+    // left:0,
+    alignSelf: 'center',
+    marginTop: hp(45),
+    // borderRadius: 50,
+    height: wp(20),
+    width: wp(20),
     // padding: 100
+  },
+  forYouText: {
+    zIndex:1,
+    position:'absolute',
+    top: hp(3),
+    alignSelf: 'center',
+    color:'white',
+    fontFamily:fonts.medium,
+    fontSize: 20,
   }
 });
 
