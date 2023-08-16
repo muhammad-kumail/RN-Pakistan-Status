@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     topList: {
         borderRadius: wp(5),
         borderWidth: wp(0.2),
-        backgroundColor: 'black',
+        backgroundColor: '#121212',
         marginHorizontal: wp(1),
         borderColor: '#FFFFFF',
         paddingHorizontal: wp(5)
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         borderRadius: wp(1),
         borderWidth: wp(0.1),
         marginVertical: wp(1),
-        backgroundColor: 'black',
+        backgroundColor: '#121212',
         // marginHorizontal: wp(1),
         // borderColor: '#E3E3E3',
         borderColor:'rgba(255,255,255,0.21)'

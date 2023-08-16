@@ -9,8 +9,9 @@ import {
 import styles from '../UrduPoetry/styles';
 import PoetryTypes from '../EnglishPoetry/TopList';
 import PoetryListUrdu from '../UrduPoetry/PoetryListUrdu';
+import Header from '../../components/Header/Header';
 
-const PunjabiPoetry: React.FC = () => {
+const PunjabiPoetry: React.FC<any> = ({navigation}) => {
     const types = [
         { id: '1', title: 'Sad Poetry' },
         { id: '2', title: 'Birthday Poetry' },
@@ -29,7 +30,15 @@ const PunjabiPoetry: React.FC = () => {
     ];
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1,backgroundColor:'#121212' }}>
+        <Header
+            title={'Punjabi Poetry'}
+            leftIcon={images.back}
+            leftIconPress={() => {
+                navigation.goBack();
+            }}
+
+        />
             <View style={{ flex: 0.05 }}>
                 <PoetryTypes data={types} />
             </View>

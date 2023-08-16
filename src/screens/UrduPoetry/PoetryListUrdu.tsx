@@ -20,7 +20,7 @@ interface HorizontalFlatListProps {
 const PoetryListUrdu: React.FC<HorizontalFlatListProps> = ({ data }) => {
     // I18nManager.forceRTL(true);
     const renderItem = ({ item }: { item: Item }) => (
-        <View style={{ backgroundColor: 'black' }}>
+        <View style={{ backgroundColor: '#121212' }}>
             <TouchableOpacity style={styles.poetrylists}>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 0.1 ,justifyContent:'center',alignItems:'flex-end',}}>
@@ -36,7 +36,7 @@ const PoetryListUrdu: React.FC<HorizontalFlatListProps> = ({ data }) => {
     );
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#121212' }}>
             <FlatList
                 data={data}
                 renderItem={renderItem}

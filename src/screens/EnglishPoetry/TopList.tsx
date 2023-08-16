@@ -17,7 +17,7 @@ interface HorizontalFlatListProps {
 
 const PoetryTypes: React.FC<HorizontalFlatListProps> = ({ data }) => {
     const renderItem = ({ item }: { item: Item }) => (
-        <View style={{backgroundColor:'black', justifyContent:'center',alignContent:'center'}}>
+        <View style={{backgroundColor:'#121212', justifyContent:'center',alignContent:'center'}}>
             <TouchableOpacity style={styles.topList}>
             <Text style={{color:'white', fontSize:wp(3)}}>{item.title}</Text>
 
