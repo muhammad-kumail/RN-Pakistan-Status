@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, SafeAreaView, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity, Text, Alert } from 'react-native';
+import { View, SafeAreaView, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity, Text, Alert, Modal } from 'react-native';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -11,14 +11,13 @@ import Header from '../../components/Header/Header';
 import RNFS from 'react-native-fs'; // Import react-native-fs
   const NUM_COLUMNS = 2;
 const ProfileImages: React.FC<any> = ({ navigation }) => {
-    const [previewVisible, setPreviewVisible] = useState(false);
-    const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Initialize with 0 or any other default index
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Initialize with 0 or any other default index
     const [selectedImage, setSelectedImage] = useState(null);
     const togglePreviewModal = (index) => {
-        setSelectedImageIndex(index);
-        setPreviewVisible(!previewVisible);
-      };
-
+      setSelectedImageIndex(index);
+      setPreviewVisible(!previewVisible);
+    };
       const handleDownload = async () => {
         console.log('selectedImage', selectedImage)
         console.log('selectedImageIndex', selectedImageIndex)
@@ -148,17 +147,39 @@ const ProfileImages: React.FC<any> = ({ navigation }) => {
                 </TouchableOpacity>
             )}
         />
-        <ImageView
+        <Modal
+                visible={previewVisible}
+                transparent={true}
+                onRequestClose={() => setPreviewVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <Image
+                        source={{ uri: imageArray[selectedImageIndex] }}
+                        style={styles.previewImage}
+                        resizeMode="contain"
+                    />
+                    <TouchableOpacity style={styles.closeButton} onPress={() => setPreviewVisible(false)}>
+                        {/* Your close button icon */}
+                        <Image source={images.cross}  style={{height:'100%' , width:'100%', tintColor:'white'}} resizeMode='contain'/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.downloadButton}>
+                        {/* Your download button */}
+                        <Image source={images.download}  style={{height:'100%' , width:'100%'}} resizeMode='contain'/>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
+        {/* <ImageView
             images={imageArray.map(image => ({ uri: image }))}
             imageIndex={selectedImageIndex}
             visible={previewVisible}
+            backgroundColor='rgba(0,0,0,0)'
             onRequestClose={() => setPreviewVisible(false)}
             FooterComponent={() => (
                 <TouchableOpacity style={styles.downloadButton} onPress={handleDownload}>
                   <Image source={images.download}  style={{height:'100%' , width:'100%'}} resizeMode='contain'/>
                 </TouchableOpacity>
               )}
-        />  
+        />   */}
     </SafeAreaView>
   );
 };
@@ -166,10 +187,14 @@ const ProfileImages: React.FC<any> = ({ navigation }) => {
 export default ProfileImages;
 
 const styles = StyleSheet.create({
-  imageContainer: {
+  container: {
       flex: 1,
-      margin: 2, 
-      alignItems:'center',
+      backgroundColor: '#121212',
+  },
+  imageContainer: {
+          flex: 1,
+          margin: 2, 
+          alignItems:'center',
   },
   image: {
       // width: Dimensions.get('window').width / NUM_COLUMNS - 6, 
@@ -178,37 +203,87 @@ const styles = StyleSheet.create({
       resizeMode: 'cover',
       borderRadius:wp(2)
   },
-    modalContainer: {
+  modalContainer: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      paddingHorizontal:8
-    },
-    closeButton: {
+      paddingHorizontal: 8,
+  },
+  closeButton: {
+      backgroundColor: 'rgba(176, 54, 193,1)',
       position: 'absolute',
       top: 16,
       right: 16,
       zIndex: 1,
-    },
-    previewImage: {
-      width: '100%',
+      height: hp(5),
+      width: wp(10),
+  },
+  previewImage: {
+      width: Dimensions.get('window').width/1.1,
       aspectRatio: 1,
       borderRadius: 8,
+      borderWidth:1,
+      borderColor:'white',
       backgroundColor: 'white',
-    },
-    downloadButton: {
-        backgroundColor: 'rgba(176, 54, 193,1)',
-        padding: 10,
-        borderRadius: wp(5),
-        position: 'absolute',
-        bottom: hp(4),
-        // right: 20,
-        alignSelf:'center',
-        height:hp(5),
-        width:wp(10),
-      },
-      buttonText: {
-        color: 'white',
-      },
-  });
+  },
+  downloadButton: {
+      backgroundColor: 'rgba(176, 54, 193,1)',
+      padding: 10,
+      borderRadius: wp(5),
+      position: 'absolute',
+      bottom: hp(4),
+      alignSelf: 'center',
+      height: hp(5),
+      width: wp(10),
+  },
+});
+
+
+// const styles = StyleSheet.create({
+//   imageContainer: {
+//       flex: 1,
+//       margin: 2, 
+//       alignItems:'center',
+//   },
+//   image: {
+//       // width: Dimensions.get('window').width / NUM_COLUMNS - 6, 
+//       width: Dimensions.get('window').width / NUM_COLUMNS - 16, 
+//       height: hp(20),
+//       resizeMode: 'cover',
+//       borderRadius:wp(2)
+//   },
+//     modalContainer: {
+//       flex: 1,
+//       justifyContent: 'center',
+//       alignItems: 'center',
+//       backgroundColor: 'rgba(0, 0, 0, 0.7)',
+//       paddingHorizontal:8
+//     },
+//     closeButton: {
+//       position: 'absolute',
+//       top: 16,
+//       right: 16,
+//       zIndex: 1,
+//     },
+//     previewImage: {
+//       width: '100%',
+//       aspectRatio: 1,
+//       borderRadius: 8,
+//       backgroundColor: 'white',
+//     },
+//     downloadButton: {
+//         backgroundColor: 'rgba(176, 54, 193,1)',
+//         padding: 10,
+//         borderRadius: wp(5),
+//         position: 'absolute',
+//         bottom: hp(4),
+//         // right: 20,
+//         alignSelf:'center',
+//         height:hp(5),
+//         width:wp(10),
+//       },
+//       buttonText: {
+//         color: 'white',
+//       },
+//   });

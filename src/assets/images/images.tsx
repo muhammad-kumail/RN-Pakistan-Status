@@ -22,6 +22,7 @@ const images = {
   download:require('./download.png'),
   Group:require('./Group.png'),
   share:require('./share.png'),
+  cross:require('./cross.png'),
 };
 
 export default images;
