@@ -74,7 +74,7 @@ const Home: React.FC<any> = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <View style={{flex:0.24}}></View>
+                    <View style={{flex:0.2}}></View>
                 </View>
             </ImageBackground>
         </SafeAreaView>
