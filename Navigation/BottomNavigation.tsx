@@ -16,6 +16,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import Audios from '../src/screens/Audios';
 type Screen1RouteProp = RouteProp<TabNavigationParamList>;
 // type Screen2RouteProp = RouteProp<TabNavigationParamList, 'Screen2'>;
 // type Screen3RouteProp = RouteProp<TabNavigationParamList, 'Screen3'>;
@@ -96,7 +97,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ route }) => {
         >
             <Tab.Screen name="Homee" component={Home} />
             <Tab.Screen name="ForYou" component={ForYou} />
-            <Tab.Screen name="Audio" component={Home} />
+            <Tab.Screen name="Audio" component={Audios} />
 
         </Tab.Navigator>
     );

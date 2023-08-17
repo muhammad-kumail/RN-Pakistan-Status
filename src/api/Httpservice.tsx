@@ -22,6 +22,9 @@ import {
 export const getHomeVides = () => {
   return doHttpGet('app/getLatestContent');
 };
+export const getHomeAudios = () => {
+  return doHttpGet('getAudioContent');
+};
 
 // export const loginUser = (data: any) => {
 //   return doHttpAuth(data, 'login');

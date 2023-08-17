@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet,PermissionsAndroid, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, SafeAreaView, Platform } from 'react-native';
+import { View, Text, FlatList, StyleSheet, PermissionsAndroid, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, SafeAreaView, Platform } from 'react-native';
 // import VideoPlayer from 'react-native-video-controls'
 import { getHomeVides } from '../../api/Httpservice';
 import Config from '../../utils/config';
@@ -49,14 +49,14 @@ const ForYou = () => {
   useEffect(() => {
     checkStoragePermission();
   }, []);
-  
+
   const checkStoragePermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
       );
-        console.log(granted);
-        
+      console.log(granted);
+
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         console.log('Storage permission granted');
       } else {
@@ -66,14 +66,14 @@ const ForYou = () => {
       console.error('Error requesting storage permission:', error);
     }
   };
-  
+
   useEffect(() => {
 
     const videos = async () => {
       try {
         const response = await getHomeVides();
         SetVideoData(response?.data?.videoContents);
-        console.log(response?.data?.videoContents)
+        console.log(response?.data)
       } catch (error) {
         console.error('Error fetching video data:', error);
       }
@@ -96,7 +96,7 @@ const ForYou = () => {
         const permissionStatus = await PermissionsAndroid.request(
           // 'android.permission.WRITE_EXTERNAL_STORAGE'
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
-          );
+        );
         if (permissionStatus === 'granted') {
 
 
@@ -107,30 +107,47 @@ const ForYou = () => {
           // setVideoDownloading(true);
           const videoUrl = Config.BASE_URL + item.mediaUrl;
           const downloadDir = RNFS.DownloadDirectoryPath;
-                const filename = `downloaded-video-${Date.now()}.mp4`;
-                const path = `${downloadDir}/${filename}`;
+          const filename = `downloaded-video-${Date.now()}.mp4`;
+          const path = `${downloadDir}/${filename}`;
           // const path = RNFS.DocumentDirectoryPath + `/` + Math.floor(date.getTime() + date.getSeconds() / 2) + '.mp4';
           console.log("path is", path)
 
-          RNFetchBlob.config({
+          await RNFetchBlob.config({
             fileCache: true,
             appendExt: 'mp4',
             path: path,
           }).fetch('GET', videoUrl)
             .then((res) => {
               console.log('Video downloaded to:', res.path());
-            })
+              // res.close();
+            }
+            )
             .catch((error) => {
               console.error('Error downloading video:', error);
             })
-
+      //     try {
+      //       const response = await RNFetchBlob.config({
+      //         fileCache: true,
+      //         appendExt: 'mp4',
+      //         path: path,
+      //       }).fetch('GET', videoUrl);
+      
+      //       console.log('Video downloaded to:', response.path());
+      //     } catch (error) {
+      //       console.error('Error downloading video:', error);
+      //     } finally {
+      //       setVideoDownloading(false); // Set to false when the download is complete or an error occurs
+      //     }
         } else {
           console.log('Permission denied');
         }
       } catch (error) {
         console.error('Error requesting permission:', error);
       }
-     
+      // finally{
+      //   setVideoDownloading(false)
+      // }
+
       //   } else {
       //     console.log("Dir existss")
       //   }
@@ -154,7 +171,9 @@ const ForYou = () => {
         {img &&
           <TouchableOpacity style={{ zIndex: 1 }} onPress={() => {
             setCheck(!check);
-            setImg(!img)
+            setImg(!img);
+            console.log("check is ", check);
+
           }}>
             <Image source={images.playBtn} style={styles.playBtn} />
           </TouchableOpacity>
@@ -251,7 +270,8 @@ const styles = StyleSheet.create({
   },
 
   video: {
-    height: '100%',
+    // height: '100%',
+    height: Dimensions.get("window").height,
     width: screenWidth,
     // zIndex:1
     // width: Dimensions.get('window').width,
@@ -307,7 +327,8 @@ const styles = StyleSheet.create({
   },
   iconSize: {
     width: wp(6),
-    height: wp(6)
+    height: wp(6),
+    resizeMode: 'contain'
   }
 });
 

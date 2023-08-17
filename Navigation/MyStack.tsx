@@ -14,6 +14,7 @@ import EnglishPoetry from '../src/screens/EnglishPoetry';
 import UrduPoetry from '../src/screens/UrduPoetry';
 import PunjabiPoetry from '../src/screens/PunjabiPoetry';
 import PoetryImages from '../src/screens/PoetryImages';
+import Audios from '../src/screens/Audios';
 
 const Stack = createNativeStackNavigator();
 // const Drawer = createDrawerNavigator();
@@ -39,6 +40,7 @@ const MyStack: React.FC = () => {
         <Stack.Screen name="UrduPoetry" component={UrduPoetry}/>
         <Stack.Screen name="PunjabiPoetry" component={PunjabiPoetry}/>
         <Stack.Screen name="PoetryImages" component={PoetryImages}/>
+        <Stack.Screen name="Audios" component={Audios}/>
         {/* <Stack.Screen name="DrawerMenu" component={DrawerMenu} /> */}
         <Stack.Screen name='Home' component={BottomNavigation} />
       </Stack.Navigator>
