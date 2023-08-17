@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, StyleSheet,PermissionsAndroid, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, SafeAreaView, Platform } from 'react-native';
 // import VideoPlayer from 'react-native-video-controls'
 import { getHomeVides } from '../../api/Httpservice';
 import Config from '../../utils/config';
@@ -7,6 +7,10 @@ import images from '../../assets/images/images';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Video from 'react-native-video';
 import fonts from '../../assets/fonts/fonts';
+import RNFS from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
+import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
@@ -20,15 +24,15 @@ interface VideoItem {
   mediaUrl: string;
   colors: string
 }
-const data: Item[] = [
-  { id: '1', content: 'Item 1 Content', color: '#FF5733' },
-  { id: '2', content: 'Item 2 Content', color: '#3498DB' },
-  { id: '3', content: 'Item 3 Content', color: '#27AE60' },
-  { id: '4', content: 'Item 1 Content', color: '#FF5733' },
-  { id: '5', content: 'Item 2 Content', color: '#3498DB' },
-  { id: '6', content: 'Item 3 Content', color: '#27AE60' },
-  // ... Add more items
-];
+// const data: Item[] = [
+//   { id: '1', content: 'Item 1 Content', color: '#FF5733' },
+//   { id: '2', content: 'Item 2 Content', color: '#3498DB' },
+//   { id: '3', content: 'Item 3 Content', color: '#27AE60' },
+//   { id: '4', content: 'Item 1 Content', color: '#FF5733' },
+//   { id: '5', content: 'Item 2 Content', color: '#3498DB' },
+//   { id: '6', content: 'Item 3 Content', color: '#27AE60' },
+//   // ... Add more items
+// ];
 
 
 const ForYou = () => {
@@ -39,7 +43,32 @@ const ForYou = () => {
   const flatListRef = useRef<FlatList<VideoItem>>(null);
   const [img, setImg] = useState(false)
   const [videoLoading, setVideoLoading] = useState(true);
+  const [videoDownloading, setVideoDownloading] = useState(false);
+  var date = new Date()
+  type AndroidPermissionType = keyof typeof PERMISSIONS.ANDROID;
   useEffect(() => {
+    checkStoragePermission();
+  }, []);
+  
+  const checkStoragePermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+      );
+        console.log(granted);
+        
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Storage permission granted');
+      } else {
+        console.log('Storage permission denied');
+      }
+    } catch (error) {
+      console.error('Error requesting storage permission:', error);
+    }
+  };
+  
+  useEffect(() => {
+
     const videos = async () => {
       try {
         const response = await getHomeVides();
@@ -62,30 +91,84 @@ const ForYou = () => {
       }
       console.log('Focused --->', mediaUrl);
     };
-    const handleVideoPress = () => {
-      setCheck(!check);
-      console.log("Video Pressed");
+    const handleVideoPress = async () => {
+      try {
+        const permissionStatus = await PermissionsAndroid.request(
+          // 'android.permission.WRITE_EXTERNAL_STORAGE'
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+          );
+        if (permissionStatus === 'granted') {
+
+
+          // if (videoDownloading) {
+          //   console.log("Video download already in progress...");
+          //   return;
+          // }
+          // setVideoDownloading(true);
+          const videoUrl = Config.BASE_URL + item.mediaUrl;
+          const downloadDir = RNFS.DownloadDirectoryPath;
+                const filename = `downloaded-video-${Date.now()}.mp4`;
+                const path = `${downloadDir}/${filename}`;
+          // const path = RNFS.DocumentDirectoryPath + `/` + Math.floor(date.getTime() + date.getSeconds() / 2) + '.mp4';
+          console.log("path is", path)
+
+          RNFetchBlob.config({
+            fileCache: true,
+            appendExt: 'mp4',
+            path: path,
+          }).fetch('GET', videoUrl)
+            .then((res) => {
+              console.log('Video downloaded to:', res.path());
+            })
+            .catch((error) => {
+              console.error('Error downloading video:', error);
+            })
+
+        } else {
+          console.log('Permission denied');
+        }
+      } catch (error) {
+        console.error('Error requesting permission:', error);
+      }
+     
+      //   } else {
+      //     console.log("Dir existss")
+      //   }
+
     };
+    // const shareVideo = async (videoPath: string) => {
+    //   const shareOptions = {
+    //     url: `file://${videoPath}`,
+    //     type: 'video/mp4', // Change this to match the video format
+    //     failOnCancel: false,
+    //   };
+
+    //   try {
+    //     await Share.open(shareOptions);
+    //   } catch (error) {
+    //     console.error('Error sharing video:', error);
+    //   }
+    // };
     return (
       <View style={styles.item}>
         {img &&
-          <TouchableOpacity style={{zIndex:1}} onPress={() => {
+          <TouchableOpacity style={{ zIndex: 1 }} onPress={() => {
             setCheck(!check);
             setImg(!img)
           }}>
             <Image source={images.playBtn} style={styles.playBtn} />
           </TouchableOpacity>
         }
-        
-         {videoLoading &&
-            <ActivityIndicator
-                // animating
-                color={"grey"}
-                size="large"
-                style={{ flex: 1, zIndex:1, position:"absolute", top:"50%", left:"45%" }}
-            />
+
+        {videoLoading &&
+          <ActivityIndicator
+            // animating
+            color={"grey"}
+            size="large"
+            style={{ flex: 1, zIndex: 1, position: "absolute", top: "50%", left: "45%" }}
+          />
         }
-        <TouchableOpacity style={styles.downloadIcon}>
+        <TouchableOpacity onPress={() => handleVideoPress()} style={styles.downloadIcon}>
           <Image source={images.download} style={styles.iconSize} tintColor="#FFFFFF" />
         </TouchableOpacity>
 
@@ -112,8 +195,9 @@ const ForYou = () => {
             paused={(visibleVideoIndex === index ? false : true) || (check)}
             repeat={true}
             resizeMode={'contain'}
-            onLoad={(data) => {setVideoLoading(!data.canPlayFastForward)
-             }}
+            onLoad={(data) => {
+              setVideoLoading(!data.canPlayFastForward)
+            }}
 
           />
 
@@ -134,7 +218,7 @@ const ForYou = () => {
   };
   return (
     <SafeAreaView>
-        <Text style={styles.forYouText}>For You</Text>
+      <Text style={styles.forYouText}>For You</Text>
       <FlatList
         ref={flatListRef}
         data={videoData}
@@ -179,7 +263,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red',
     zIndex: 1,
     position: 'absolute',
-    top:0,
+    top: 0,
     // left:0,
     alignSelf: 'center',
     marginTop: hp(45),
@@ -189,41 +273,41 @@ const styles = StyleSheet.create({
     // padding: 100
   },
   forYouText: {
-    zIndex:1,
-    position:'absolute',
+    zIndex: 1,
+    position: 'absolute',
     top: hp(3),
     alignSelf: 'center',
-    color:'white',
-    fontFamily:fonts.medium,
+    color: 'white',
+    fontFamily: fonts.medium,
     fontSize: 20,
   },
   downloadIcon: {
-    zIndex:1,
-    position:'absolute',
-    right:wp(5),
-    bottom:hp(25),
+    zIndex: 1,
+    position: 'absolute',
+    right: wp(5),
+    bottom: hp(25),
     // height:wp(6),
     // width:wp(6)
   },
-  whatsapp:  {
-    zIndex:1,
-    position:'absolute',
-    right:wp(5),
-    bottom:hp(35),
+  whatsapp: {
+    zIndex: 1,
+    position: 'absolute',
+    right: wp(5),
+    bottom: hp(35),
     // height:wp(6),
     // width:wp(6)
   },
-  share:  {
-    zIndex:1,
-    position:'absolute',
-    right:wp(5),
-    bottom:hp(15),
+  share: {
+    zIndex: 1,
+    position: 'absolute',
+    right: wp(5),
+    bottom: hp(15),
     // height:wp(6),
     // width:wp(6)
   },
   iconSize: {
-    width:wp(6), 
-    height:wp(6)
+    width: wp(6),
+    height: wp(6)
   }
 });
 

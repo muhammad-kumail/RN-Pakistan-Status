@@ -9,37 +9,46 @@ import ImageView from "react-native-image-viewing";
 import images from '../../assets/images/images';
 import Header from '../../components/Header/Header';
 import RNFS from 'react-native-fs'; // Import react-native-fs
+import { request } from 'react-native-permissions';
 const NUM_COLUMNS = 1;
 const PoetryImages: React.FC<any> = ({ navigation }) => {
-    const [previewVisible, setPreviewVisible] = useState(false);
-    const [selectedImageIndex, setSelectedImageIndex] = useState(0); // Initialize with 0 or any other default index
-    const [selectedImage, setSelectedImage] = useState(null);
-    const togglePreviewModal = (index) => {
-        setSelectedImageIndex(index);
-        setPreviewVisible(!previewVisible);
+   
+    const downloadImage = async (imageUrl: string) => {
+
+        try {
+            const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
+
+            if (permissionStatus === 'granted') {
+
+                const downloadDir = RNFS.DownloadDirectoryPath;
+                const filename = `downloaded-image-${Date.now()}.jpg`;
+                const filePath = `${downloadDir}/${filename}`;
+
+                try {
+                    const response = await RNFS.downloadFile({
+                        fromUrl: imageUrl,
+                        toFile: filePath,
+                    });
+
+                    if (response) {
+                        console.log('Image downloaded to:', filePath);
+                        Alert.alert('Image downloaded successfully!');
+                    } else {
+                        console.error('Image download failed with status:', response);
+                        Alert.alert('Image download failed!');
+                    }
+                } catch (error) {
+                    console.error('Error downloading image:', error);
+                    Alert.alert('Error downloading image!');
+                }
+            } else {
+                console.log('Permission denied');
+            }
+        } catch (error) {
+            console.error('Error requesting permission:', error);
+        }
     };
 
-    const handleDownload = async () => {
-        console.log('selectedImage', selectedImage)
-        console.log('selectedImageIndex', selectedImageIndex)
-        Alert.alert("Hello", "Download Press")
-        // if (selectedImage) {
-        //   try {
-        //     const response = await RNFS.downloadFile({
-        //       fromUrl: selectedImage.uri,
-        //       toFile: `${RNFS.DocumentDirectoryPath}/${selectedImage.fileName}`,
-        //     });
-
-        //     if (response.statusCode === 200) {
-        //       console.log('Image downloaded successfully.');
-        //     } else {
-        //       console.log('Failed to download image.');
-        //     }
-        //   } catch (error) {
-        //     console.error('Error downloading image:', error);
-        //   }
-        // }
-    };
     const imageArray = [
         'https://wallpapers.com/images/featured/beautiful-3vau5vtfa3qn7k8v.jpg',
         'https://e0.pxfuel.com/wallpapers/675/1019/desktop-wallpaper-97405-serene-landcapes-background.jpg',
@@ -132,21 +141,23 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
                         <View>
 
                             <TouchableOpacity
-                                onPress={() => togglePreviewModal(index)}
+                                // onPress={() => togglePreviewModal(index)}
                                 style={styles.imageContainer}
                             >
                                 <FastImage source={{ uri: item }} style={styles.image} />
                             </TouchableOpacity>
                         </View>
-                        <View style={{ height: hp(13),  flexDirection: 'column' ,
-                        position:'absolute', width:wp(100), alignItems:'flex-end', paddingRight:wp(7), marginTop:wp(21)}}>
-                            <TouchableOpacity style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }} onPress={() => alert(`whatapp press , ${item?.id}`,)}>
+                        <View style={{
+                            height: hp(13), flexDirection: 'column',
+                            position: 'absolute', width: wp(100), alignItems: 'flex-end', paddingRight: wp(7), marginTop: wp(21)
+                        }}>
+                            <TouchableOpacity style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }}>
                                 <Image source={images.whatsapp} style={{ height: wp(6), width: wp(6) }} resizeMode='contain' />
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }} onPress={() => alert(`download press , ${item?.id}`)}>
+                            <TouchableOpacity onPress={() => downloadImage(item)} style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }} >
                                 <Image source={images.downarrow} style={{ height: wp(6), width: wp(6) }} resizeMode='contain' />
                             </TouchableOpacity>
-                        </View> 
+                        </View>
                     </View>
                 )}
             />
