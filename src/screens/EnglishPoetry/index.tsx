@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, SafeAreaView, ScrollView, ImageBackground, FlatList } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import images from '../../assets/images/images';
 import {
     widthPercentageToDP as wp,
@@ -9,20 +9,42 @@ import styles from './styles';
 import PoetryTypes from '../../components/TopList/TopList';
 import PoetryListEnglish from '../../components/EnglishPoetry/PoetryListEnglish';
 import Header from '../../components/Header/Header';
+import { getDataByPost } from '../../api/Httpservice';
 
 const EnglishPoetry: React.FC<any> = ({ navigation }) => {
-    const types = [
-        { id: '1', title: 'Sad Poetry' },
-        { id: '2', title: 'Birthday Poetry' },
-        { id: '3', title: 'Funny Poetry' },
-        { id: '4', title: 'Friends Poetry' },
-    ];
-    const data = [
-        { id: '1', Text: 'Tis better to have loved and lost than never to have loved at all Tis better to have loved and lost than never to have loved at all Tis better to have loved and lost than never to have loved at all', Image: images.Group },
-        { id: '2', Text: 'Birthday Poetry', Image: images.Group },
-        { id: '3', Text: 'Funny Poetry', Image: images.Group },
-        { id: '4', Text: 'Friends Poetry', Image: images.Group },
-    ];
+    const [types, setTypes] = useState([]);
+    const [data, setData] = useState([]);
+    useEffect(()=> {
+        getData()
+    },[])
+    
+    const getData =async ()=>{
+        const data={
+            "categoryTitle": "English Poetry"
+        }
+
+        await getDataByPost(data , 'findAllMainCategory').then((res)=>{
+            getContent(res.data[0]._id)
+            setTypes(res.data)
+            console.log("My response data",res)
+        }).catch((error)=> {
+            console.log("Error" , error.message)
+        })
+    }
+
+    const getContent = async (id: any) => {
+        const data={
+            "mainCategoryId": id
+        }
+        await getDataByPost(data , 'getPoetry').then((res)=>{
+            // getContent(res.data[0]._id)
+            console.log("My response containt data",JSON.stringify(res))
+            setData(res.data)
+        }).catch((error)=> {
+            console.log("Error" , error.message)
+        })
+    }
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#121212' }}>
@@ -37,7 +59,7 @@ const EnglishPoetry: React.FC<any> = ({ navigation }) => {
             // onPressLogo={() => alert('Bell Press')}
             />
             <View style={{ flex: 0.05 }}>
-                <PoetryTypes data={types} />
+                <PoetryTypes data={types} getID={getContent} />
             </View>
             <View style={{ flex: 0.95 }}>
                 <PoetryListEnglish data={data} />
@@ -47,3 +69,7 @@ const EnglishPoetry: React.FC<any> = ({ navigation }) => {
 }
 
 export default EnglishPoetry
+
+function getData() {
+    throw new Error('Function not implemented.');
+}
