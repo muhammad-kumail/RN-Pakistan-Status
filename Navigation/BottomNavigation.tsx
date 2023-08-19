@@ -17,14 +17,14 @@ import {
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Audios from '../src/screens/Audios';
+import { useSelector } from 'react-redux';
+import {AppState} from "../Redux/Reducer/Reducer"
 type Screen1RouteProp = RouteProp<TabNavigationParamList>;
 // type Screen2RouteProp = RouteProp<TabNavigationParamList, 'Screen2'>;
 // type Screen3RouteProp = RouteProp<TabNavigationParamList, 'Screen3'>;
 
 export type TabNavigationParamList = {
     Screen1: undefined;
-    //   Screen2: undefined;
-    //   Screen3: undefined;
 };
 const Tab = createBottomTabNavigator();
 
@@ -41,12 +41,17 @@ interface route {
     // icon:any
 }
 const BottomNavigation: React.FC<BottomNavigationProps> = ({ route }) => {
-    return (
+    const data = useSelector((state: AppState) => state.app.bottomNavVisible);
+
+//   const data= bottomNavVisible?.app?.bottomNavVisible;
+  console.log(data, "====")
+    return( 
         <Tab.Navigator
        
             screenOptions={({ route }) => ({
-            
+                
                 tabBarIcon: ({ focused, size, color }) => {
+                    
                     let iconName: string = '';
                     let icon: any;
                     // let icon:'';
@@ -90,16 +95,24 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ route }) => {
                     height: wp(13),
                     backgroundColor:'#B036C1',
                     borderRadius:50,
-
+                    // display: data === true ? "none" : undefined
                   }
 
             })}
         >
             <Tab.Screen name="Homee" component={Home} />
             <Tab.Screen name="ForYou" component={ForYou} />
-            <Tab.Screen name="Audio" component={Audios} />
+            <Tab.Screen 
+                name="Audio" 
+                component={Audios} 
+                // options={{
+                //     // tabBarStyle:{display: data? 'flex' : 'none' }
+                //     // tabBarStyle:{display: data===false? 'none' : null}
+                // }}
+            />
 
         </Tab.Navigator>
+       
     );
 };
 

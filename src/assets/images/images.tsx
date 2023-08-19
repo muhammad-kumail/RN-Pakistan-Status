@@ -2,8 +2,8 @@ const images = {
   play: require('./play-button.png'),
   background:require('./backgroundDrawer.png'),
   logo:require('./Vector.png'),
-  playBtn:require('./play.png'),
-  pausebtn: require("./pause-button.png"),
+  playBtn:require('./play1.png'),
+  pausebtn: require("./pause1.png"),
   splash2Img: require('./splash2Img.png'),
   homeIcon:require('./HomeIcon.png'),
   forYouIcon:require('./forYouIcon.png'),
@@ -23,7 +23,12 @@ const images = {
   Group:require('./Group.png'),
   share:require('./share.png'),
   cross:require('./cross.png'),
-  verticalDots:require('./moreDots.png')
+  verticalDots:require('./moreDots.png'),
+  cancel:require('./cancel.png'),
+  shareBlack:require('./shareBlack.png'),
+  downloadBlack:require('./downloadBlack.png'),
+  downArrow:require('./down-arrow.png'),
+  verticalDotsWhite:require('./verticalDotsWhite.png')
 };
 
 export default images;
