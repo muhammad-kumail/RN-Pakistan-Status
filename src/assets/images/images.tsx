@@ -28,7 +28,15 @@ const images = {
   shareBlack:require('./shareBlack.png'),
   downloadBlack:require('./downloadBlack.png'),
   downArrow:require('./down-arrow.png'),
-  verticalDotsWhite:require('./verticalDotsWhite.png')
+  verticalDotsWhite:require('./verticalDotsWhite.png'),
+  nextPlay:require('./nextPlay.png'),
+  previousPlay:require('./previousPlay.png'),
+  pauseWhite:require('./pauseWhite.png'),
+  playWhite:require('./playWhite.png'),
+  repeat:require('./repeat.png'),
+  link:require('./link.png'),
+  shareWhite:require('./shareWhite.png'),
+  downloadWhite:require('./downloadWhite.png')
 };
 
 export default images;
