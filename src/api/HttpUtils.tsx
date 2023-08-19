@@ -1,6 +1,7 @@
 import Config from "../utils/config";
 
 const BASE_URL = `${Config.BASE_URL}/api/v1/`; // local url
+
 // const BASE_URL = 'https://pakprintwishes.com:3001/api/v2/'; // aws
 
 
@@ -38,28 +39,30 @@ export const doHttpGet = (endPoint: string) => {
 //   return result;
 // };
 
-// export const doHttpPost = (data, endPoint) => {
-//   var myHeaders = new Headers();
-//   myHeaders.append("Content-Type", "application/json");
-//   // myHeaders.append('Authorization', `Bearer ${token}`);
-//   // myHeaders.append('Content-Type', 'multipart/form-data');
-//   var requestOptions = {
-//     method: 'POST',
-//     headers: myHeaders,
-//     body: data,
-//     redirect: 'follow'
-//   };
-//   const result = fetch(BASE_URL + endPoint, requestOptions)
-//     .then(response => response.json())
-//     .then(result => {
-//       return result;
-//     })
-//     .catch(error => {
-//       console.log('error', error);
-//       return error;
-//     });
-//   return result;
-// };
+export const doHttpPost = (data : any , endPoint: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  var raw = JSON.stringify(data);
+  // myHeaders.append('Authorization', `Bearer ${token}`);
+  // myHeaders.append('Content-Type', 'multipart/form-data');
+  console.log("data" , data , "endpoint" , endPoint)
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+  const result = fetch(BASE_URL + endPoint, requestOptions)
+    .then(response => response.json())
+    .then(result => {
+      return result;
+    })
+    .catch(error => {
+      console.log('error', error);
+      return error;
+    });
+  return result;
+};
 
 // export const doHttpMultipartWithOutAuth = (data, endPoint) => {
 //   var requestOptions = {

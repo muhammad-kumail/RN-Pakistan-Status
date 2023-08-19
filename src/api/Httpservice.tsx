@@ -1,7 +1,7 @@
 import {
   doHttpGet,
   // doHttpMultipart,
-  // doHttpPost,
+  doHttpPost,
   // doHttpGetAfterLogin,
   // doHttpMultipartWithOutAuth,
   // doHttpPatch,
@@ -26,9 +26,9 @@ export const getHomeAudios = () => {
   return doHttpGet('getAudioContent');
 };
 
-// export const loginUser = (data: any) => {
-//   return doHttpAuth(data, 'login');
-// };
+export const getDataByPost = (data: any , endpoint: any) => {
+  return doHttpPost(data, endpoint);
+};
 // export const loginVendor = (data: any) => {
 //   return doHttpAuth(data, 'verdor/Login');
 // };
