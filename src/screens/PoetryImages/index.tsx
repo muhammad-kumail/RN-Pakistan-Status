@@ -12,6 +12,7 @@ import RNFS from 'react-native-fs'; // Import react-native-fs
 import { request } from 'react-native-permissions';
 import { getData } from '../../api/Httpservice';
 import Config from '../../utils/config';
+import Share from 'react-native-share';
 
 const NUM_COLUMNS = 1;
 
@@ -67,6 +68,21 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
         }
     };
 
+    const shareImageOnWhatsApp = async (url: any) => {
+        try {
+        const image = url; // Replace with the actual path to your image
+        const shareOptions = {
+            title: 'Share via WhatsApp',
+            url: `file://${image}`,
+            failOnCancel: false,
+            showAppsToView: ['whatsapp'],
+        };
+    
+        await Share.open(shareOptions);
+        } catch (error) {
+        console.error('Error sharing image on WhatsApp:', error.message);
+        }
+    };
 
     return (
         <SafeAreaView
@@ -98,7 +114,7 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
                             height: hp(13), flexDirection: 'column',
                             position: 'absolute', width: wp(100), alignItems: 'flex-end', paddingRight: wp(7), marginTop: wp(21)
                         }}>
-                            <TouchableOpacity style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }}>
+                            <TouchableOpacity onPress={() => shareImageOnWhatsApp(`${Config.BASE_URL}${item?.imgUrl}`)} style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }}>
                                 <Image source={images.whatsapp} style={{ height: wp(6), width: wp(6) }} resizeMode='contain' />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => downloadImage(`${Config.BASE_URL}${item?.imgUrl}`)} style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }} >
