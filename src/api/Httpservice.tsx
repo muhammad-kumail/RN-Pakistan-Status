@@ -1,7 +1,7 @@
 import {
   doHttpGet,
   // doHttpMultipart,
-  // doHttpPost,
+  doHttpPost,
   // doHttpGetAfterLogin,
   // doHttpMultipartWithOutAuth,
   // doHttpPatch,
@@ -22,12 +22,10 @@ import {
 export const getHomeVides = () => {
   return doHttpGet('app/getLatestContent');
 };
+export const getHomeAudios = () => {
+  return doHttpGet('getAudioContent');
+};
 
-<<<<<<< Updated upstream
-// export const loginUser = (data: any) => {
-//   return doHttpAuth(data, 'login');
-// };
-=======
 export const getDataByPost = (data: any , endpoint: any) => {
   return doHttpPost(data, endpoint);
 };
@@ -36,7 +34,7 @@ export const getDataByPost = (data: any , endpoint: any) => {
 export const getData = (endpoint: any) => {
   return doHttpGet(endpoint);
 };
->>>>>>> Stashed changes
+
 // export const loginVendor = (data: any) => {
 //   return doHttpAuth(data, 'verdor/Login');
 // };

@@ -34,7 +34,7 @@ const PoetryTypes: React.FC<HorizontalFlatListProps> = ({ data, getID}) => {
     ;   
 
     return (
-        <SafeAreaView style={{ flex: 1 , backgroundColor:'#121212'}}>
+        <SafeAreaView style={{ flex: 1 , backgroundColor:'black'}}>
             <FlatList
                 horizontal
                 data={data}
