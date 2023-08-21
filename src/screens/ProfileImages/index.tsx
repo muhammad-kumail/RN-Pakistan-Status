@@ -8,6 +8,7 @@ import FastImage from 'react-native-fast-image';
 import ImageView from "react-native-image-viewing";
 import images from '../../assets/images/images';
 import Header from '../../components/Header/Header';
+import { request } from 'react-native-permissions';
 import RNFS from 'react-native-fs'; // Import react-native-fs
 import { getProfileImgs } from '../../api/Httpservice';
 import Config from '../../utils/config';
@@ -22,6 +23,41 @@ const ProfileImages: React.FC<any> = ({ navigation }) => {
        
         poetryImgs()
     }, [])
+    const downloadImage = async (imageUrl: string) => {
+
+        try {
+            const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
+
+            if (permissionStatus === 'granted') {
+
+                const downloadDir = RNFS.DownloadDirectoryPath;
+                const filename = `downloaded-image-${Date.now()}.jpg`;
+                const filePath = `${downloadDir}/${filename}`;
+
+                try {
+                    const response = await RNFS.downloadFile({
+                        fromUrl: imageUrl,
+                        toFile: filePath,
+                    });
+
+                    if (response) {
+                        console.log('Image downloaded to:', filePath);
+                        Alert.alert('Image downloaded successfully!');
+                    } else {
+                        console.error('Image download failed with status:', response);
+                        Alert.alert('Image download failed!');
+                    }
+                } catch (error) {
+                    console.error('Error downloading image:', error);
+                    Alert.alert('Error downloading image!');
+                }
+            } else {
+                console.log('Permission denied');
+            }
+        } catch (error) {
+            console.error('Error requesting permission:', error);
+        }
+    };
     const poetryImgs = async () => {
         try {
             const response = await getProfileImgs();
@@ -189,8 +225,9 @@ const ProfileImages: React.FC<any> = ({ navigation }) => {
                         {/* Your close button icon */}
                         <Image source={images.cross} style={{ height: '100%', width: '100%', tintColor: 'white' }} resizeMode='contain' />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.downloadButton}>
+                    <TouchableOpacity style={styles.downloadButton} onPress={() => downloadImage(`${Config.BASE_URL}${image[selectedImageIndex]?.imgUrl}`)}>
                         {/* Your download button */}
+                        
                         <Image source={images.download} style={{ height: '100%', width: '100%' }} resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
@@ -221,7 +258,7 @@ const styles = StyleSheet.create({
     imageContainer: {
         flex: 1,
         margin: 2,
-        alignItems: 'center',
+        alignItems: 'flex-start',
     },
     image: {
         // width: Dimensions.get('window').width / NUM_COLUMNS - 6, 
