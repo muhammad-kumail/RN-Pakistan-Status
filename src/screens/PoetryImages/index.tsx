@@ -14,6 +14,7 @@ import { getData } from '../../api/Httpservice';
 import Config from '../../utils/config';
 
 const NUM_COLUMNS = 1;
+
 const PoetryImages: React.FC<any> = ({ navigation }) => {
     const [imagesArr, setImagesArr] = useState([]);
     useEffect(()=> {
@@ -85,9 +86,7 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
                 numColumns={NUM_COLUMNS}
                 renderItem={({ item, index }) => (
                     <View>
-
                         <View>
-
                             <TouchableOpacity
                                 // onPress={() => togglePreviewModal(index)}
                                 style={styles.imageContainer}

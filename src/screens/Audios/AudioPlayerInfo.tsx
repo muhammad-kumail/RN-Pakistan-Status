@@ -75,16 +75,16 @@ const AudioPlayerInfo: React.FC<AudioPlayerInfoProps> = ({ selectedAudio, new: a
             setupPlayer();
         }
     }, [isFocused]);
-    useEffect(() => {
-        const updatePosition = async () => {
-            const newPosition = await TrackPlayer.getPosition();
-            setCurrentPosition(newPosition);
-        };
+    // useEffect(() => {
+    //     const updatePosition = async () => {
+    //         const newPosition = await TrackPlayer.getPosition();
+    //         setCurrentPosition(newPosition);
+    //     };
 
-        const progressInterval = setInterval(updatePosition, 1000/2); 
+    //     const progressInterval = setInterval(updatePosition, 1000/2); 
 
-        return () => clearInterval(progressInterval); 
-    }, []);
+    //     return () => clearInterval(progressInterval); 
+    // }, []);
     const setupPlayer = async () => {
         setIsPlaying(true)
         // console.log(playing,"plzzz")
@@ -179,7 +179,6 @@ const AudioPlayerInfo: React.FC<AudioPlayerInfoProps> = ({ selectedAudio, new: a
         <View
         //  onPress={() => setModalVisible(true)} 
         style={{padding: wp(1),flexDirection:'column'}}>
-            
         <View style={style.container}>
             <View style={{ flex: 0.1 }}>
                 <Image source={{ uri: `${Config.BASE_URL}${selectedAudio.audioImg}` }}

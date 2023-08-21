@@ -12,10 +12,11 @@ import AudioPlayerInfo from './AudioPlayerInfo';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
-import { setBottomNavVisibility } from '../../../Redux/Actions/Actions';
-import { SET_BOTTOM_NAV_VISIBILITY } from '../../../Redux/Actions/types';
+// import { setBottomNavVisibility } from '../../../Redux/Actions/Actions';
+// import { SET_BOTTOM_NAV_VISIBILITY } from '../../../Redux/Actions/types';
 // import { Modalize } from 'react-native-modalize';
-import Menu, { MenuItem } from 'react-native-material-menu';
+// import Menu, { MenuItem } from 'react-native-material-menu';
+import Slider from '@react-native-community/slider';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -31,6 +32,7 @@ import * as Progress from 'react-native-progress';
 import { AppState } from '../../../Redux/Reducer/Reducer';
 import fonts from '../../assets/fonts/fonts';
 import styles from './styles';
+import { SlideInRight } from 'react-native-reanimated';
 
 interface audioItem {
     _id: string;
@@ -82,7 +84,23 @@ const Audios: React.FC<any> = ({ navigation }) => {
         }
     }, [AudioData]);
 
-
+    const formatDuration = (seconds: number) => {
+        const totalSeconds = Math.floor(seconds);
+        const minutes = Math.floor(totalSeconds / 60);
+        const remainingSeconds = totalSeconds % 60;
+      
+        const formattedMinutes = minutes.toString().padStart(2, '0');
+        const formattedSeconds = (remainingSeconds + (seconds - totalSeconds)).toFixed(0).padStart(2, '0');
+      
+        return `${formattedMinutes}:${formattedSeconds}`;
+      };
+    const seebBar = () => {
+        if (position !== null && duration !== null && duration !== 0) {
+            console.log(position / duration)
+            return currentPosition / duration;
+        }
+        return 0;
+    }
     const toggleMenu = (index: number) => {
         if (openMenuIndex !== null) {
             setMenuVisibleList(prevMenuVisibleList => {
@@ -114,11 +132,12 @@ const Audios: React.FC<any> = ({ navigation }) => {
             }
         };
         // console.log(AudioData?.audioImgColor);
-
         audios();
         if (!isFocused) {
             setSelectedAudio(null);
             stopvideo()
+            setIsPlaying(true)
+
         }
     }, [isFocused]);
     useEffect(() => {
@@ -127,7 +146,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
             setCurrentPosition(newPosition);
         };
 
-        const progressInterval = setInterval(updatePosition, 1000 / 5);
+        const progressInterval = setInterval(updatePosition, 1000);
 
         return () => clearInterval(progressInterval);
     }, []);
@@ -178,7 +197,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
         await TrackPlayer.play();
         setIsPlaying(true);
     };
-    const playAudio1 = async (audioUrl: string, title: string, audioItem: audioItem,) => {
+    const NextPrevAudio = async (audioUrl: string, title: string, audioItem: audioItem,) => {
         const track = {
             id: audioUrl,
             url: `${Config.BASE_URL}${audioUrl}`,
@@ -188,17 +207,12 @@ const Audios: React.FC<any> = ({ navigation }) => {
         console.log("------------", `${Config.BASE_URL}${audioItem.audioImg}`);
 
         await TrackPlayer.reset();
-        console.log('Adding track to queue...');
-        console.log(`${Config.BASE_URL}/${audioUrl}`);
-
+        // console.log(`${Config.BASE_URL}/${audioUrl}`);
         await TrackPlayer.add([track]);
-
-        console.log('Starting playback...');
         await TrackPlayer.play();
         await TrackPlayer.setVolume(0.5);
         setSelectedAudio(audioItem);
         setFocusedItemId(audioItem._id);
-        console.log('Playback started:');
         const newPosition = await TrackPlayer.getPosition();
         const newDuration = await TrackPlayer.getDuration();
         setPosition(newPosition);
@@ -219,7 +233,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
             const nextIndex = selectedAudioIndex + 1;
             const nextAudio = AudioData[nextIndex];
             if (nextAudio) {
-                playAudio1(nextAudio.audioUrl, nextAudio.title, nextAudio);
+                NextPrevAudio(nextAudio.audioUrl, nextAudio.title, nextAudio);
             }
         }
     };
@@ -228,7 +242,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
             const prevIndex = selectedAudioIndex - 1;
             const prevAudio = AudioData[prevIndex];
             if (prevAudio) {
-                playAudio1(prevAudio.audioUrl, prevAudio.title, prevAudio);
+                NextPrevAudio(prevAudio.audioUrl, prevAudio.title, prevAudio);
             }
         }
     };
@@ -257,7 +271,6 @@ const Audios: React.FC<any> = ({ navigation }) => {
             };
             console.log("------------", `${Config.BASE_URL}${item.audioImg}`);
             await TrackPlayer.reset();
-            console.log('Adding track to queue...');
             console.log(`${Config.BASE_URL}/${audioUrl}`);
             await TrackPlayer.add([track]);
             console.log('color is----', audioImgColor);
@@ -265,7 +278,8 @@ const Audios: React.FC<any> = ({ navigation }) => {
             await TrackPlayer.setVolume(0.5);
             setSelectedAudio(item);
             setFocusedItemId(item._id);
-            console.log('Playback started:');
+            setIsPlaying(true)
+            console.log('Playback started---:', `${Config.BASE_URL}${audioUrl}`);
             const newPosition = await TrackPlayer.getPosition();
             const newDuration = await TrackPlayer.getDuration();
             setPosition(newPosition);
@@ -291,7 +305,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
                         style={{ height: wp(12), width: wp(12), }} />
                 </View>
                 <View style={{ flex: 0.75 }}>
-                    <Text style={{ color: isFocused && (selectedAudio !== null) ? '#B036C1' : 'white', fontSize:wp(4)}}>{item.title}</Text>
+                    <Text style={{ color: isFocused && (selectedAudio !== null) ? '#B036C1' : 'white', fontSize: wp(4) }}>{item.title}</Text>
                     <Text style={{ color: 'grey', fontSize: wp(3) }}>{item.author}</Text>
                 </View>
                 <View style={{
@@ -364,14 +378,64 @@ const Audios: React.FC<any> = ({ navigation }) => {
 
                         <TouchableOpacity onPress={() => setModalVisible(true)}>
                             {selectedAudio === null ? null : (
-                                <AudioPlayerInfo
-                                AudioData={AudioData}
-                                    selectedAudio={selectedAudio}
-                                    new={true}
-                                    position={position}
-                                    duration={duration}
-                                    playing={isPlaying}
-                                />
+                                // <AudioPlayerInfo
+                                // AudioData={AudioData}
+                                //     selectedAudio={selectedAudio}
+                                //     new={true}
+                                //     position={position}
+                                //     duration={duration}
+                                //     playing={isPlaying}
+                                // />
+                                <View
+                                    //  onPress={() => setModalVisible(true)} 
+                                    style={{ padding: wp(1), flexDirection: 'column' }}>
+                                    <View style={style.container}>
+                                        <View style={{ flex: 0.1 }}>
+                                            <Image source={{ uri: `${Config.BASE_URL}${selectedAudio.audioImg}` }}
+                                                style={{ height: wp(9), width: wp(9), }} />
+                                        </View>
+                                        <View style={{
+                                            flexDirection: 'column', flex: 0.8,
+                                            marginHorizontal: wp(2),
+                                        }}>
+                                            <View style={{ flex: 0.6 }}>
+
+                                                <Text style={style.title}>{selectedAudio.title}</Text>
+                                                <Text style={style.desc}>{selectedAudio.author}</Text>
+                                            </View>
+                                            {/* <ProgressBar
+                                            styleAttr="Horizontal"
+                                            indeterminate={false}
+                                            progress={isNaN(currentPosition) || isNaN(duration) ? 0 : currentPosition / duration}
+                                        /> */}
+                                            <View style={{ flex: 0.4 }}>
+
+                                                <Slider
+                                                    // style={{width:wp(100)}}
+                                                    minimumValue={0}
+                                                    maximumValue={1}
+                                                    value={seebBar()}
+                                                    minimumTrackTintColor='white'
+                                                    maximumTrackTintColor='white'
+                                                    thumbTintColor='transparent'
+                                                    onValueChange={value => {
+                                                        setCurrentPosition(
+                                                            value
+                                                        )
+
+                                                    }}
+                                                />
+                                            </View>
+                                        </View>
+                                        <View style={{ flex: 0.1, alignItems: 'flex-end' }}>
+                                            <TouchableOpacity onPress={handlePlayPause}>
+                                                <Image source={isPlaying ? images.pausebtn : images.playBtn}
+                                                    style={{ height: wp(6), width: wp(6), }} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                    {/* <ProgressBar progress={currentPosition / duration} color='white'style={{backgroundColor:'rgba(255, 255, 255, 0.25)', height:wp(0.5)}}  /> */}
+                                </View>
                             )}
                         </TouchableOpacity>
                     </View>
@@ -390,11 +454,11 @@ const Audios: React.FC<any> = ({ navigation }) => {
                             </TouchableOpacity>
                         </View>
                         <View style={styles.modalTopText}>
-                            <Text style={{ color: 'white', fontFamily: fonts.poppins_regular,fontSize:wp(3) }}>Playing Form Playlist</Text>
+                            <Text style={{ color: 'white', fontFamily: fonts.poppins_regular, fontSize: wp(3) }}>Playing Form Playlist</Text>
                         </View>
                         <View style={styles.modalTopOption}>
                             <TouchableOpacity style={{}} onPress={() => openBottomSheet(selectedAudio?.audioImg, selectedAudio?.title, selectedAudio?.author)} >
-                                <Image source={images.verticalDotsWhite} style={{ height: wp(4), width: wp(4) ,resizeMode:'contain'}} />
+                                <Image source={images.verticalDotsWhite} style={{ height: wp(4), width: wp(4), resizeMode: 'contain' }} />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -404,23 +468,41 @@ const Audios: React.FC<any> = ({ navigation }) => {
                     </View>
                     <View style={{ flex: 0.4, }}>
                         <View style={styles.modalAudioDetail}>
-                            <View style={{ flex: 0.4 , marginLeft:wp(2
-                                )}}>
+                            <View style={{
+                                flex: 0.4, marginLeft: wp(2
+                                )
+                            }}>
                                 <Text style={styles.title}>{selectedAudio?.title}</Text>
                                 <Text style={styles.desc}>{selectedAudio?.author}</Text>
                             </View>
                             <View style={{
-                                flexDirection: 'row', flex: 0.4,width:wp(90),
-                                justifyContent: 'center', alignItems: 'center',}}>
-                                <View style={{ marginHorizontal:wp(1), }}>
-                                    <Text style={{ color: 'white' }}>{currentPosition.toFixed(1)}</Text>
+                                flexDirection: 'row', flex: 0.4, width: wp(90),
+                                justifyContent: 'center', alignItems: 'center',
+                            }}>
+                                <View style={{ marginHorizontal: wp(0), }}>
+                                    <Text style={{ color: 'white' }}>{formatDuration(currentPosition)}</Text>
                                 </View>
-                                <View style={{ marginHorizontal: wp(1) }}>
-                                     <ProgressBar progress={currentPosition / duration} color='white'
-                                        style={{ backgroundColor: 'rgba(255, 255, 255, 0.25)', height: wp(0.3),width:wp(75) }} />
+                                <View style={{ marginHorizontal: wp(0) }}>
+                                    <Slider
+                                        style={{ width: wp(65), }}
+                                        minimumValue={0}
+                                        maximumValue={1}
+                                        value={seebBar()}
+                                        minimumTrackTintColor='white'
+                                        maximumTrackTintColor='white'
+                                        thumbTintColor='transparent'
+                                        // '#B036C1'
+
+                                        onValueChange={value => {
+                                            setCurrentPosition(
+                                                value
+                                            )
+                                        }}
+                                    />
                                 </View>
-                                <View style={{  marginHorizontal:wp(1)}}>
-                                    <Text style={{ color: 'white' }}>{duration.toFixed(1)}</Text>
+                                <View style={{ marginHorizontal: wp(0) }}>
+
+                                    <Text style={{ color: 'white' }}>{formatDuration(duration)}</Text>
                                 </View>
                             </View>
                         </View>
@@ -460,17 +542,17 @@ const Audios: React.FC<any> = ({ navigation }) => {
                     },
                 }}>
                 <View style={{ flexDirection: 'column', marginHorizontal: wp(7), flex: 1 }}>
-                    <View style={{ flexDirection: 'row', flex: 0.6 ,alignItems:'center'}}>
+                    <View style={{ flexDirection: 'row', flex: 0.6, alignItems: 'center' }}>
                         <View style={{ flex: 0.15 }}>
                             <Image source={{ uri: `${Config.BASE_URL}${selectedAudio?.audioImg}` }}
                                 style={{ height: wp(12), width: wp(12), }} />
                         </View>
                         <View style={{ flex: 0.75 }}>
-                            <Text style={{ color: 'white', fontSize:wp(4)}}>{selectedAudio?.title}</Text>
+                            <Text style={{ color: 'white', fontSize: wp(4) }}>{selectedAudio?.title}</Text>
                             <Text style={{ color: 'grey', fontSize: wp(2) }}>{selectedAudio?.author}</Text>
                         </View>
                     </View>
-                    <View style={{ flex: 0.4 ,justifyContent:'center',}}>
+                    <View style={{ flex: 0.4, justifyContent: 'center', }}>
                         <View style={{ flex: 0.5 }} >
                             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Image source={images.shareWhite} style={{ height: wp(4), width: wp(4), resizeMode: 'contain' }} />
@@ -490,7 +572,33 @@ const Audios: React.FC<any> = ({ navigation }) => {
         </GestureHandlerRootView>
     )
 }
+const style = StyleSheet.create({
+    container: {
+        backgroundColor: '#C12C73',
+        // flex:0.2,
+        // backgroundColor:'red',
+        position: 'absolute',
+        bottom: wp(0.5),
+        left: 0,
+        right: 0,
+        padding: wp(1),
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: wp(1),
+        height: wp(11),
+        marginVertical: wp(0.5)
+    },
+    title: {
+        color: 'white',
+        fontSize: wp(3),
+        fontWeight: 'bold',
 
+    },
+    desc: {
+        fontSize: wp(2),
+        color: 'white'
+    }
+});
 export default Audios
 
 
