@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { View, SafeAreaView, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity, Text, Alert } from 'react-native';
 import {
     widthPercentageToDP as wp,
@@ -11,6 +11,7 @@ import Header from '../../components/Header/Header';
 import RNFS from 'react-native-fs'; // Import react-native-fs
 import { request } from 'react-native-permissions';
 const NUM_COLUMNS = 1;
+
 const PoetryImages: React.FC<any> = ({ navigation }) => {
    
     const downloadImage = async (imageUrl: string) => {
@@ -137,9 +138,7 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
                 numColumns={NUM_COLUMNS}
                 renderItem={({ item, index }) => (
                     <View>
-
                         <View>
-
                             <TouchableOpacity
                                 // onPress={() => togglePreviewModal(index)}
                                 style={styles.imageContainer}

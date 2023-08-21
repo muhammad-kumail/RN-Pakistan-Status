@@ -25,6 +25,9 @@ export const getHomeVides = () => {
 export const getHomeAudios = () => {
   return doHttpGet('getAudioContent');
 };
+export const getProfileImgs = () => {
+  return doHttpGet('getProfileImg');
+};
 
 export const getDataByPost = (data: any , endpoint: any) => {
   return doHttpPost(data, endpoint);
