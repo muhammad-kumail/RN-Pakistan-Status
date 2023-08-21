@@ -5,7 +5,13 @@ import 'react-native-gesture-handler';
 
 const App: React.FC = () => {
   return (
+<<<<<<< Updated upstream
     <MyStack />
+=======
+    <Provider store={store}>
+      <MyStack />
+    </Provider>
+>>>>>>> Stashed changes
   );
 };
 
