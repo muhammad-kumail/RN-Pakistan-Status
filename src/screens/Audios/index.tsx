@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, ImageSourcePropType, TextInput, Modal } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, PermissionsAndroid, TextInput, Modal } from 'react-native'
 import React, { useEffect, useState, useRef } from 'react'
 import { getHomeAudios } from '../../api/Httpservice';
 import Header from '../../components/Header/Header';
@@ -26,14 +26,16 @@ import { useIsFocused } from '@react-navigation/native';
 // import BottomSheet from '@gorhom/bottom-sheet';
 // import RawBottomSheet from 'react-native-raw-bottom-sheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
-
+import Share from 'react-native-share';
 import { MD3Colors, ProgressBar } from 'react-native-paper';
 import * as Progress from 'react-native-progress';
 import { AppState } from '../../../Redux/Reducer/Reducer';
 import fonts from '../../assets/fonts/fonts';
 import styles from './styles';
 import { SlideInRight } from 'react-native-reanimated';
-
+import RNFS from 'react-native-fs'; // Import react-native-fs
+import { request } from 'react-native-permissions';
+import RNFetchBlob from 'rn-fetch-blob';
 interface audioItem {
     _id: string;
     audioImg: any;
@@ -64,7 +66,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
         // audioImgColor:any
     } | null>(null);
     const [selectedAudioIndex, setSelectedAudioIndex] = useState<number | null>(null);
-
+    const [movePosition, setMovePosition] = useState(0);
     const dispatch = useDispatch();
     // const bottomSheetRef = React.useRef<RawBottomSheet | null>(null);
     const bottomSheetRef = React.useRef<RBSheet | null>(null);
@@ -88,12 +90,12 @@ const Audios: React.FC<any> = ({ navigation }) => {
         const totalSeconds = Math.floor(seconds);
         const minutes = Math.floor(totalSeconds / 60);
         const remainingSeconds = totalSeconds % 60;
-      
+
         const formattedMinutes = minutes.toString().padStart(2, '0');
         const formattedSeconds = (remainingSeconds + (seconds - totalSeconds)).toFixed(0).padStart(2, '0');
-      
+
         return `${formattedMinutes}:${formattedSeconds}`;
-      };
+    };
     const seebBar = () => {
         if (position !== null && duration !== null && duration !== 0) {
             console.log(position / duration)
@@ -117,6 +119,61 @@ const Audios: React.FC<any> = ({ navigation }) => {
             return updatedMenuVisibleList;
         });
     };
+    const shareAudio = async (url: string) => {
+
+        const audio = url;
+
+        try {
+            const video = audio; // Replace with the actual path to your image
+            const shareOptions = {
+                title: 'Share',
+                url: video,
+                failOnCancel: false,
+                showAppsToView: ['whatsapp'],
+            };
+            console.log(shareOptions.url, "----")
+
+            await Share.open(shareOptions);
+        } catch (error) {
+            console.error('Error sharing image on WhatsApp:', error.message);
+        }
+
+    };
+    const downloadAudio = async (url: string) => {
+        console.log("is audio download?????????");
+
+        try {
+            const permissionStatus = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+            );
+            if (permissionStatus === 'granted') {
+
+                // const videoUrl = Config.BASE_URL + url;
+                const downloadDir = RNFS.DownloadDirectoryPath;
+                const filename = `downloaded-audio-${Date.now()}.mp4`;
+                const path = `${downloadDir}/${filename}`;
+                // const path = RNFS.DocumentDirectoryPath + `/` + Math.floor(date.getTime() + date.getSeconds() / 2) + '.mp4';
+                console.log("path is", path)
+
+                await RNFetchBlob.config({
+                    fileCache: true,
+                    appendExt: 'mp4',
+                    path: path,
+                }).fetch('GET', url)
+                    .then((res) => {
+                        console.log('audio downloaded to:', res.path());
+                    }
+                    )
+                    .catch((error) => {
+                        console.error('Error downloading audio:', error);
+                    })
+            } else {
+                console.log('Permission denied');
+            }
+        } catch (error) {
+            console.error('Error requesting permission:', error);
+        }
+    }
     // const toggleMenu = () => {
     //     setMenuVisible(!menuVisible);
     // };
@@ -144,12 +201,19 @@ const Audios: React.FC<any> = ({ navigation }) => {
         const updatePosition = async () => {
             const newPosition = await TrackPlayer.getPosition();
             setCurrentPosition(newPosition);
+            setCurrentPosition(newPosition);
         };
 
         const progressInterval = setInterval(updatePosition, 1000);
 
         return () => clearInterval(progressInterval);
     }, []);
+    // const setSliderPosition = (position: number) => {
+    //     const newPosition = Math.max(0, Math.min(1, position));
+    //     console.log(newPosition,"newwwwwwwwwww")
+    //     setCurrentPosition(newPosition);
+    //     TrackPlayer.seekTo(newPosition); // Update the audio track position when slider is moved
+    //   };
     const setupPlayer = async () => {
         setIsPlaying(true)
 
@@ -294,55 +358,62 @@ const Audios: React.FC<any> = ({ navigation }) => {
             }
         }
         return (
-            <TouchableOpacity
-                style={{
-                    height: wp(12), flexDirection: 'row',
-                    alignItems: 'center', justifyContent: 'center', marginVertical: wp(1)
-                }}
-                onPress={() => playAudio(item.audioUrl, item.title, item.audioImgColor)}>
-                <View style={{ flex: 0.15 }}>
-                    <Image source={{ uri: `${Config.BASE_URL}${item.audioImg}` }}
-                        style={{ height: wp(12), width: wp(12), }} />
-                </View>
-                <View style={{ flex: 0.75 }}>
-                    <Text style={{ color: isFocused && (selectedAudio !== null) ? '#B036C1' : 'white', fontSize: wp(4) }}>{item.title}</Text>
-                    <Text style={{ color: 'grey', fontSize: wp(3) }}>{item.author}</Text>
-                </View>
-                <View style={{
-                    flex: 0.1, alignItems: 'flex-end',
-                    height: wp(12), width: wp(12), justifyContent: 'center'
-                }}>
-                    <TouchableOpacity style={{ flex: 1, width: wp(10), alignItems: 'flex-end', justifyContent: 'center' }}
-                        onPress={() => toggleMenu(index)}
-                    >
-                        <Image source={images.verticalDots} style={{ height: wp(4), width: wp(4), }} />
-                    </TouchableOpacity>
-                </View>
+            <>
+                <TouchableOpacity
+                    style={{
+                        height: wp(12), flexDirection: 'row',
+                        alignItems: 'center', justifyContent: 'center', marginVertical: wp(1)
+                    }}
+                    onPress={() => playAudio(item.audioUrl, item.title, item.audioImgColor)}>
+                    <View style={{ flex: 0.15 }}>
+                        <Image source={{ uri: `${Config.BASE_URL}${item.audioImg}` }}
+                            style={{ height: wp(12), width: wp(12), }} />
+                    </View>
+                    <View style={{ flex: 0.7, zIndex: 0 }}>
+                        <Text numberOfLines={1} style={{ color: isFocused && (selectedAudio !== null) ? '#B036C1' : 'white', fontSize: wp(4), marginBottom: hp(1) }}>{item.title}</Text>
+                        <Text style={{ color: 'grey', fontSize: wp(3) }}>{item.author}</Text>
+                    </View>
+                    <View style={{
+                        flex: 0.15, alignItems: 'flex-end',
+                        height: wp(12), width: wp(12), justifyContent: 'center'
+                    }}>
+                        <TouchableOpacity style={{ flex: 1, width: wp(10), alignItems: 'flex-end', justifyContent: 'center' }}
+                            onPress={() => toggleMenu(index)}
+                        >
+                            <Image source={images.verticalDots} style={{ height: wp(4), width: wp(4), }} />
+                        </TouchableOpacity>
+                    </View>
+
+                </TouchableOpacity>
                 {menuVisibleList[index] && openMenuIndex === index && (
                     <View style={{
                         position: 'absolute',
-                        top: wp(8),
+                        top: wp(3),
                         right: wp(3),
-                        borderRadius: wp(1), backgroundColor: 'white',
-                        padding: wp(1)
-                    }}
-                    >
-
+                        borderRadius: wp(1),
+                        backgroundColor: 'white',
+                        padding: wp(1),
+                        // zIndex: 1000
+                    }}>
                         <View>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Image source={images.shareBlack} style={{ height: wp(4), width: wp(4), resizeMode: 'contain' }} />
-                                <Text style={{ color: 'black', paddingHorizontal: wp(3), fontFamily: fonts.poppins_regular }}>Share</Text>
+                            <TouchableOpacity
+                                onPress={() => shareAudio(`${Config.BASE_URL}${item?.audioUrl}`)}
+                                style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Image source={images.shareBlack} style={{ height: wp(3), width: wp(3), resizeMode: 'contain' }} />
+                                <Text style={{ color: 'black', paddingHorizontal: wp(2), fontFamily: fonts.poppins_regular,fontSize:wp(3.5) }}>Share</Text>
                             </TouchableOpacity>
                         </View>
                         <View>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Image source={images.downloadBlack} style={{ height: wp(4), width: wp(4), resizeMode: 'contain' }} />
-                                <Text style={{ color: 'black', paddingHorizontal: wp(3), fontFamily: fonts.poppins_regular }}>Download</Text>
+                            <TouchableOpacity
+                                onPress={() => downloadAudio(`${Config.BASE_URL}${item?.audioUrl}`)}
+                                style={{ flexDirection: 'row', alignItems: 'center'}}>
+                                <Image source={images.downloadBlack} style={{ height: wp(3), width: wp(3), resizeMode: 'contain' }} />
+                                <Text style={{ color: 'black', paddingHorizontal: wp(2), fontFamily: fonts.poppins_regular,fontSize:wp(3.5) }}>Download</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 )}
-            </TouchableOpacity>
+            </>
         );
     };
 
@@ -417,8 +488,10 @@ const Audios: React.FC<any> = ({ navigation }) => {
                                                     value={seebBar()}
                                                     minimumTrackTintColor='white'
                                                     maximumTrackTintColor='white'
-                                                    thumbTintColor='transparent'
-                                                    onValueChange={value => {
+                                                    thumbTintColor='red'
+                                                    onValueChange=
+                                                    // {setSliderPosition}
+                                                    {value => {
                                                         setCurrentPosition(
                                                             value
                                                         )

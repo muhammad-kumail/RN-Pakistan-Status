@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, PermissionsAndroid, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, SafeAreaView, Platform } from 'react-native';
+import { View, Text, FlatList, StyleSheet, PermissionsAndroid, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, SafeAreaView, Alert } from 'react-native';
 // import VideoPlayer from 'react-native-video-controls'
 import { getHomeVides } from '../../api/Httpservice';
 import Config from '../../utils/config';
@@ -10,6 +10,8 @@ import fonts from '../../assets/fonts/fonts';
 import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import Share from 'react-native-share';
+import SendIntent from 'react-native-send-intent';
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
@@ -119,25 +121,39 @@ const ForYou = () => {
           }).fetch('GET', videoUrl)
             .then((res) => {
               console.log('Video downloaded to:', res.path());
+              // try {
+              //   const image = path; // Replace with the actual path to your image
+              //   const shareOptions = {
+              //     title: 'Share via WhatsApp',
+              //     url: `file://${image}`,
+              //     failOnCancel: false,
+              //     showAppsToView: ['whatsapp'],
+              //   };
+              //   console.log(shareOptions.url, "----")
+
+              //   await Share.open(shareOptions);
+              // } catch (error) {
+              //   console.error('Error sharing image on WhatsApp:', error.message);
+              // }
               // res.close();
             }
             )
             .catch((error) => {
               console.error('Error downloading video:', error);
             })
-      //     try {
-      //       const response = await RNFetchBlob.config({
-      //         fileCache: true,
-      //         appendExt: 'mp4',
-      //         path: path,
-      //       }).fetch('GET', videoUrl);
-      
-      //       console.log('Video downloaded to:', response.path());
-      //     } catch (error) {
-      //       console.error('Error downloading video:', error);
-      //     } finally {
-      //       setVideoDownloading(false); // Set to false when the download is complete or an error occurs
-      //     }
+          //     try {
+          //       const response = await RNFetchBlob.config({
+          //         fileCache: true,
+          //         appendExt: 'mp4',
+          //         path: path,
+          //       }).fetch('GET', videoUrl);
+
+          //       console.log('Video downloaded to:', response.path());
+          //     } catch (error) {
+          //       console.error('Error downloading video:', error);
+          //     } finally {
+          //       setVideoDownloading(false); // Set to false when the download is complete or an error occurs
+          //     }
         } else {
           console.log('Permission denied');
         }
@@ -152,6 +168,77 @@ const ForYou = () => {
       //     console.log("Dir existss")
       //   }
 
+    };
+    const shareVideo = async () => {
+
+      const videoUrl = Config.BASE_URL + item.mediaUrl;
+
+      try {
+        const video = videoUrl; // Replace with the actual path to your image
+        const shareOptions = {
+          title: 'Share',
+          url: video,
+          failOnCancel: false,
+          showAppsToView: ['whatsapp'],
+        };
+        console.log(shareOptions.url, "----")
+
+        await Share.open(shareOptions);
+      } catch (error) {
+        console.error('Error sharing image on WhatsApp:', error.message);
+      }
+
+    };
+    const shareVideoOnWhatsApp = async () => {
+
+      try {
+        console.log("whtsapp---");
+        const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
+
+        if (permissionStatus === 'granted') {
+          const videoUrl = Config.BASE_URL + item.mediaUrl;
+          const downloadDir = RNFS.DownloadDirectoryPath;
+          const filename = `downloaded-video-${Date.now()}.mp4`;
+          const path = `${downloadDir}/${filename}`;
+          try {
+            const response = await RNFS.downloadFile({
+              fromUrl: videoUrl,
+              toFile: path,
+            });
+
+            if (response) {
+              console.log('Image downloaded to:', path);
+              try {
+                const video = path; // Replace with the actual path to your image
+                const shareOptions = {
+                  title: 'Share via WhatsApp',
+                  url: `file://${video}`,
+                  failOnCancel: false,
+                  social: Share.Social.WHATSAPP,
+                  showAppsToView: ['whatsapp'],
+                };
+                console.log(shareOptions.url, "----")
+
+                await Share.shareSingle(shareOptions);
+              } catch (error) {
+                console.error('Error sharing image on WhatsApp:', error.message);
+              }
+              Alert.alert('Image downloaded successfully!');
+            } else {
+              console.error('Image download failed with status:', response);
+              Alert.alert('Image download failed!');
+            }
+          } catch (error) {
+            console.error('Error downloading image:', error);
+            Alert.alert('Error downloading image!');
+          }
+        } else {
+          console.log('Permission denied');
+        }
+      } catch (error) {
+        console.error('Error requesting permission:', error);
+      }
+    
     };
     // const shareVideo = async (videoPath: string) => {
     //   const shareOptions = {
@@ -191,11 +278,11 @@ const ForYou = () => {
           <Image source={images.download} style={styles.iconSize} tintColor="#FFFFFF" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.whatsapp}>
+        <TouchableOpacity onPress={() => shareVideoOnWhatsApp()} style={styles.whatsapp}>
           <Image source={images.whatsapp} style={styles.iconSize} tintColor="#FFFFFF" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.share}>
+        <TouchableOpacity onPress={() => shareVideo()} style={styles.share}>
           <Image source={images.share} style={styles.iconSize} tintColor="#FFFFFF" />
         </TouchableOpacity>
 

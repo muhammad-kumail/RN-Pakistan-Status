@@ -1,4 +1,4 @@
 const Config = {
-     BASE_URL : "https://fb28-182-185-211-189.ngrok-free.app"
+     BASE_URL : "http://16.16.215.202:8180"
 }
 export default Config
