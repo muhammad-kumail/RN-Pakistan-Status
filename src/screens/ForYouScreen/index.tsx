@@ -93,7 +93,7 @@ const ForYou = () => {
       }
       console.log('Focused --->', mediaUrl);
     };
-    const handleVideoPress = async () => {
+    const audioDownload = async () => {
       try {
         const permissionStatus = await PermissionsAndroid.request(
           // 'android.permission.WRITE_EXTERNAL_STORAGE'
@@ -121,21 +121,7 @@ const ForYou = () => {
           }).fetch('GET', videoUrl)
             .then((res) => {
               console.log('Video downloaded to:', res.path());
-              // try {
-              //   const image = path; // Replace with the actual path to your image
-              //   const shareOptions = {
-              //     title: 'Share via WhatsApp',
-              //     url: `file://${image}`,
-              //     failOnCancel: false,
-              //     showAppsToView: ['whatsapp'],
-              //   };
-              //   console.log(shareOptions.url, "----")
-
-              //   await Share.open(shareOptions);
-              // } catch (error) {
-              //   console.error('Error sharing image on WhatsApp:', error.message);
-              // }
-              // res.close();
+              
             }
             )
             .catch((error) => {
@@ -171,23 +157,69 @@ const ForYou = () => {
     };
     const shareVideo = async () => {
 
-      const videoUrl = Config.BASE_URL + item.mediaUrl;
+      // const videoUrl = Config.BASE_URL + item.mediaUrl;
 
+      // try {
+      //   const video = videoUrl; // Replace with the actual path to your image
+      //   const shareOptions = {
+      //     title: 'Share',
+      //     url: video,
+      //     failOnCancel: false,
+      //     showAppsToView: ['whatsapp'],
+      //   };
+      //   console.log(shareOptions.url, "----")
+
+      //   await Share.open(shareOptions);
+      // } catch (error) {
+      //   console.error('Error sharing image on WhatsApp:', error.message);
+      // }
       try {
-        const video = videoUrl; // Replace with the actual path to your image
-        const shareOptions = {
-          title: 'Share',
-          url: video,
-          failOnCancel: false,
-          showAppsToView: ['whatsapp'],
-        };
-        console.log(shareOptions.url, "----")
+        console.log("whtsapp---");
+        const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
 
-        await Share.open(shareOptions);
+        if (permissionStatus === 'granted') {
+          const videoUrl = Config.BASE_URL + item.mediaUrl;
+          const downloadDir = RNFS.DownloadDirectoryPath;
+          const filename = `downloaded-video-${Date.now()}.mp4`;
+          const path = `${downloadDir}/${filename}`;
+          try {
+            const response = await RNFS.downloadFile({
+              fromUrl: videoUrl,
+              toFile: path,
+            });
+
+            if (response) {
+              console.log('Image downloaded to:', path);
+              try {
+                const video = path; // Replace with the actual path to your image
+                const shareOptions = {
+                  title: 'Share via WhatsApp',
+                  url: `file://${video}`,
+                  failOnCancel: false,
+                  // social: Share.Social.WHATSAPP,
+                  showAppsToView: ['whatsapp'],
+                };
+                console.log(shareOptions.url, "----")
+
+                await Share.open(shareOptions);
+              } catch (error) {
+                console.error('Error sharing image on WhatsApp:', error.message);
+              }
+              Alert.alert('Image downloaded successfully!');
+            } else {
+              console.error('Image download failed with status:', response);
+              Alert.alert('Image download failed!');
+            }
+          } catch (error) {
+            console.error('Error downloading image:', error);
+            Alert.alert('Error downloading image!');
+          }
+        } else {
+          console.log('Permission denied');
+        }
       } catch (error) {
-        console.error('Error sharing image on WhatsApp:', error.message);
+        console.error('Error requesting permission:', error);
       }
-
     };
     const shareVideoOnWhatsApp = async () => {
 
@@ -240,19 +272,6 @@ const ForYou = () => {
       }
     
     };
-    // const shareVideo = async (videoPath: string) => {
-    //   const shareOptions = {
-    //     url: `file://${videoPath}`,
-    //     type: 'video/mp4', // Change this to match the video format
-    //     failOnCancel: false,
-    //   };
-
-    //   try {
-    //     await Share.open(shareOptions);
-    //   } catch (error) {
-    //     console.error('Error sharing video:', error);
-    //   }
-    // };
     return (
       <View style={styles.item}>
         {img &&
@@ -274,7 +293,7 @@ const ForYou = () => {
             style={{ flex: 1, zIndex: 1, position: "absolute", top: "50%", left: "45%" }}
           />
         }
-        <TouchableOpacity onPress={() => handleVideoPress()} style={styles.downloadIcon}>
+        <TouchableOpacity onPress={() => audioDownload()} style={styles.downloadIcon}>
           <Image source={images.download} style={styles.iconSize} tintColor="#FFFFFF" />
         </TouchableOpacity>
 

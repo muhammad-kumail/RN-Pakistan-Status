@@ -1,11 +1,11 @@
-import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, PermissionsAndroid, TextInput, Modal } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, PermissionsAndroid, Alert, Modal, TextInput, AppState } from 'react-native'
 import React, { useEffect, useState, useRef } from 'react'
 import { getHomeAudios } from '../../api/Httpservice';
 import Header from '../../components/Header/Header';
 import images from '../../assets/images/images';
 import { SafeAreaView } from 'react-native';
 // import Sound = require('react-native-sound');
-import TrackPlayer, { Capability } from 'react-native-track-player';
+import TrackPlayer, { usePlaybackState } from 'react-native-track-player';
 import { Button } from 'react-native';
 import Config from '../../utils/config';
 import AudioPlayerInfo from './AudioPlayerInfo';
@@ -29,13 +29,16 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import Share from 'react-native-share';
 import { MD3Colors, ProgressBar } from 'react-native-paper';
 import * as Progress from 'react-native-progress';
-import { AppState } from '../../../Redux/Reducer/Reducer';
+// import { AppState } from '../../../Redux/Reducer/Reducer';
 import fonts from '../../assets/fonts/fonts';
 import styles from './styles';
 import { SlideInRight } from 'react-native-reanimated';
 import RNFS from 'react-native-fs'; // Import react-native-fs
 import { request } from 'react-native-permissions';
 import RNFetchBlob from 'rn-fetch-blob';
+// import _ from 'lodash';
+import LinearGradient from 'react-native-linear-gradient';
+
 interface audioItem {
     _id: string;
     audioImg: any;
@@ -52,6 +55,7 @@ interface AudioMenu {
 const Audios: React.FC<any> = ({ navigation }) => {
     const isFocused = useIsFocused();
     const [AudioData, SetAudioData] = useState<audioItem[]>([]);
+    const [audioTitles, setAudioTitles] = useState<audioItem[]>([]);
     const [selectedAudio, setSelectedAudio] = useState<audioItem | null>(null);
     const [filteredData, setFilteredData] = useState(AudioData);
     const [searchQuery, setSearchQuery] = useState('');
@@ -74,8 +78,10 @@ const Audios: React.FC<any> = ({ navigation }) => {
     const [menuVisibleList, setMenuVisibleList] = useState<boolean[]>([]);
     const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
     const [currentPosition, setCurrentPosition] = useState(0);
-
+    const [isvalue, setIsValue] = useState(true);
     const [isPlaying, setIsPlaying] = useState(true);
+    // const playbackState = usePlaybackState();
+
     // Initialize the menuVisibleList with false values when AudioData changes
     // useEffect(() => {
     //     setMenuVisibleList(Array(AudioData.length).fill(false));
@@ -85,6 +91,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
             setMenuVisibleList(Array(AudioData.length).fill(false));
         }
     }, [AudioData]);
+
 
     const formatDuration = (seconds: number) => {
         const totalSeconds = Math.floor(seconds);
@@ -97,8 +104,11 @@ const Audios: React.FC<any> = ({ navigation }) => {
         return `${formattedMinutes}:${formattedSeconds}`;
     };
     const seebBar = () => {
-        if (position !== null && duration !== null && duration !== 0) {
-            console.log(position / duration)
+        if (currentPosition !== null && duration !== null && duration !== 0) {
+            console.log(currentPosition, "position");
+            // console.log(duration, " duration");
+
+            // console.log(currentPosition / duration,"position/duration")
             return currentPosition / duration;
         }
         return 0;
@@ -121,21 +131,53 @@ const Audios: React.FC<any> = ({ navigation }) => {
     };
     const shareAudio = async (url: string) => {
 
-        const audio = url;
-
         try {
-            const video = audio; // Replace with the actual path to your image
-            const shareOptions = {
-                title: 'Share',
-                url: video,
-                failOnCancel: false,
-                showAppsToView: ['whatsapp'],
-            };
-            console.log(shareOptions.url, "----")
+            console.log("whtsapp---");
+            const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
 
-            await Share.open(shareOptions);
+            if (permissionStatus === 'granted') {
+                const audioUrl = url;
+                const downloadDir = RNFS.DownloadDirectoryPath;
+                const filename = `downloaded-audio-${Date.now()}.mp4`;
+                const path = `${downloadDir}/${filename}`;
+                try {
+                    const response = await RNFS.downloadFile({
+                        fromUrl: audioUrl,
+                        toFile: path,
+                    });
+
+                    if (response) {
+                        console.log('Image downloaded to:', path);
+                        try {
+                            const audio = path; // Replace with the actual path to your image
+                            const shareOptions = {
+                                title: 'Share via WhatsApp',
+                                url: `file://${audio}`,
+                                failOnCancel: false,
+                                //   social: Share.Social.WHATSAPP,
+                                showAppsToView: ['whatsapp'],
+                            };
+                            console.log(shareOptions.url, "----")
+
+                            // await Share.shareSingle(shareOptions);
+                            await Share.open(shareOptions);
+                        } catch (error) {
+                            console.error('Error sharing image on WhatsApp:', error.message);
+                        }
+                        Alert.alert('Image downloaded successfully!');
+                    } else {
+                        console.error('Image download failed with status:', response);
+                        Alert.alert('Image download failed!');
+                    }
+                } catch (error) {
+                    console.error('Error downloading image:', error);
+                    Alert.alert('Error downloading image!');
+                }
+            } else {
+                console.log('Permission denied');
+            }
         } catch (error) {
-            console.error('Error sharing image on WhatsApp:', error.message);
+            console.error('Error requesting permission:', error);
         }
 
     };
@@ -148,7 +190,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
             );
             if (permissionStatus === 'granted') {
 
-                // const videoUrl = Config.BASE_URL + url;
+                // const audioUrl = Config.BASE_URL + url;
                 const downloadDir = RNFS.DownloadDirectoryPath;
                 const filename = `downloaded-audio-${Date.now()}.mp4`;
                 const path = `${downloadDir}/${filename}`;
@@ -174,51 +216,78 @@ const Audios: React.FC<any> = ({ navigation }) => {
             console.error('Error requesting permission:', error);
         }
     }
-    // const toggleMenu = () => {
-    //     setMenuVisible(!menuVisible);
-    // };
     useEffect(() => {
         TrackPlayer.setupPlayer();
+
         const audios = async () => {
             try {
                 const response = await getHomeAudios();
                 SetAudioData(response?.data);
-                console.log(response?.data)
+                // setAudioTitles(response?.data?.title)
+                console.log(response?.data?.title, "0909090909090")
             } catch (error) {
-                console.error('Error fetching video data:', error);
+                console.error('Error fetching audio data:', error);
             }
         };
         // console.log(AudioData?.audioImgColor);
         audios();
         if (!isFocused) {
             setSelectedAudio(null);
-            stopvideo()
+            stopaudio()
             setIsPlaying(true)
 
         }
     }, [isFocused]);
+    // useEffect(() => {
+    //     TrackPlayer.setupPlayer().then(() => {
+    //         const updateOptions = () => {
+    //             let options = {
+    //                 stopWithApp: true,
+    //                 playIcon: images.play,
+    //                 pauseIcon: images.pauseWhite,
+    //                 previousIcon: images.previousPlay,
+    //                 nextIcon: images.nextPlay,
+    //                 // color: 'red'
+    //             };
+
+    //             TrackPlayer.updateOptions(options)
+    //                 .then(() => console.log('Capabilities set'))
+    //                 .catch(error => console.error('Error setting capabilities:', error));
+    //         };
+
+    //         // Call your updateOptions function
+    //         updateOptions();
+    //     });
+    // }, []);
     useEffect(() => {
-        const updatePosition = async () => {
-            const newPosition = await TrackPlayer.getPosition();
-            setCurrentPosition(newPosition);
-            setCurrentPosition(newPosition);
-        };
+        if (isvalue === true) {
+            const updatePosition = async () => {
+                const newPosition = await TrackPlayer.getPosition();
+                setCurrentPosition(newPosition);
 
-        const progressInterval = setInterval(updatePosition, 1000);
+                // setCurrentPosition(newPosition);
+            };
+            const progressInterval = setInterval(updatePosition, 1000);
+            return () => clearInterval(progressInterval);
+        }
+        else {
 
-        return () => clearInterval(progressInterval);
-    }, []);
-    // const setSliderPosition = (position: number) => {
-    //     const newPosition = Math.max(0, Math.min(1, position));
-    //     console.log(newPosition,"newwwwwwwwwww")
-    //     setCurrentPosition(newPosition);
-    //     TrackPlayer.seekTo(newPosition); // Update the audio track position when slider is moved
-    //   };
-    const setupPlayer = async () => {
-        setIsPlaying(true)
+        }
 
+    }, [currentPosition, isvalue, audioTitles]);
+    const setSliderPosition = async (position: number) => {
+        // TrackPlayer.pause()
+        const newPosition = Math.max(0, Math.min(1, position)) * duration;
+        console.log(newPosition, "newwwwwwwwwww")
+        setCurrentPosition(newPosition);
+        console.log(currentPosition, "again newwwww");
+        // TrackPlayer.pause();
+        // TrackPlayer.play()
+        TrackPlayer.seekTo(newPosition);
+        await TrackPlayer.getPosition();
+        setIsValue(true)
     };
-    const stopvideo = async () => {
+    const stopaudio = async () => {
         await TrackPlayer.pause();
     }
     const data = () => {
@@ -227,8 +296,8 @@ const Audios: React.FC<any> = ({ navigation }) => {
     }
     const handleSearch = (text: string) => {
         setSearchQuery(text);
-
-        // const filtered = AudioData.filter((item) =>
+        // console.log(audioTitles,"data of titless")
+        // const filtered = audioTitles.filter((item) =>
         //     item.title.toLowerCase().includes(text.toLowerCase())
         // );
 
@@ -322,7 +391,72 @@ const Audios: React.FC<any> = ({ navigation }) => {
             setSelectedAudioInfo({ audioImg, title, author, });
         }
     };
+    const playRandomTrack = async () => {
+        try {
+            const randomIndex = Math.floor(Math.random() * AudioData.length);
+            const randomTrack = AudioData[randomIndex];
+            console.log(`${Config.BASE_URL}${randomTrack.audioUrl}`, "------")
+            // await TrackPlayer.skip(randomTrack);
+            const track = {
+                id: randomTrack._id, // Assign an ID to the track
+                url: `${Config.BASE_URL}${randomTrack.audioUrl}`,
+                title: randomTrack.title, // Set title if needed
+                artist: randomTrack.author, // Set artist if needed
+            };
 
+            await TrackPlayer.reset(); // Clear previous tracks
+            await TrackPlayer.add([track]);
+            await TrackPlayer.play();
+            setSelectedAudio(randomTrack)
+        } catch (error) {
+            console.error('Error playing random track:', error);
+        }
+    };
+    // const updateOptions = () => {
+    //     let options = {
+    //         stopWithApp: true,
+    //         playIcon: images.play,
+    //         pauseIcon: images.pauseWhite,
+    //         previousIcon: images.previousPlay,
+    //         nextIcon: images.nextPlay,
+    //         color: '#FA3843'
+    //     };
+
+    //     TrackPlayer.updateOptions(options).then(() => console.log('capabilities set'));
+    // }
+    // const setupTrackPlayer = async (audioUrl: string, title: string, audioImgColor: string) => {
+    //     // Initialize TrackPlayer
+    //     console.log("this is console logg okkkk");
+
+    //     await TrackPlayer.setupPlayer();
+
+    //     // Register the custom notification layout
+    //     await TrackPlayer.updateOptions({
+    //         capabilities: [
+    //             TrackPlayer.CAPABILITY_PLAY,
+    //             TrackPlayer.CAPABILITY_PAUSE,
+    //             TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
+    //             TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
+    //         ],
+    //         compactCapabilities: [
+    //             TrackPlayer.CAPABILITY_PLAY,
+    //             TrackPlayer.CAPABILITY_PAUSE,
+    //         ],
+    //         // Add other options and settings as needed
+
+    //     });
+
+    //     // Add your tracks and set up playback
+    //     const track = {
+    //         id: audioUrl,
+    //         url: `${Config.BASE_URL}${audioUrl}`,
+    //         title: title,
+    //         audioImgColor: audioImgColor
+    //     };
+    //     // await TrackPlayer.reset();
+    //     await TrackPlayer.add([track]);
+    //     await TrackPlayer.play();
+    // };
     const renderItem = ({ item, index }: { item: audioItem, index: number }) => {
 
         const isFocused = focusedItemId === item._id;
@@ -333,6 +467,26 @@ const Audios: React.FC<any> = ({ navigation }) => {
                 title: title,
                 audioImgColor: audioImgColor
             };
+            // TrackPlayer.setupPlayer().then(() => {
+            //     let options = {        // maxArtworkSize: 1000,
+            //         // capabilities: [
+            //         //         TrackPlayer.CAPABILITY_PLAY,
+            //         //         TrackPlayer.CAPABILITY_PAUSE,
+            //         //         TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
+            //         //         TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS
+            //         // ],
+            //         stopWithApp: true,
+            //         playIcon: images.play,
+            //         pauseIcon: images.pauseWhite,
+            //         previousIcon: images.previousPlay,
+            //         nextIcon: images.nextPlay,
+            //         // icon: require('../../img/48logo.png'),
+            //         // color: '#FA3843',
+            //     };
+            //     TrackPlayer.updateOptions(options).then(() => console.log('capabilities set'));
+            //     TrackPlayer.play();
+            //     // this.getTracksFromApi()
+            // });
             console.log("------------", `${Config.BASE_URL}${item.audioImg}`);
             await TrackPlayer.reset();
             console.log(`${Config.BASE_URL}/${audioUrl}`);
@@ -343,13 +497,14 @@ const Audios: React.FC<any> = ({ navigation }) => {
             setSelectedAudio(item);
             setFocusedItemId(item._id);
             setIsPlaying(true)
+            // setupTrackPlayer(audioUrl, title, audioImgColor);
             console.log('Playback started---:', `${Config.BASE_URL}${audioUrl}`);
             const newPosition = await TrackPlayer.getPosition();
             const newDuration = await TrackPlayer.getDuration();
             setPosition(newPosition);
             setDuration(newDuration);
-            console.log("position", newPosition);
-            console.log("duration", newDuration);
+            // console.log("position", newPosition);
+            // console.log("duration", newDuration);
 
             const selectedAudioIndex = AudioData.findIndex(item => item.audioUrl === audioUrl);
             if (selectedAudioIndex !== -1) {
@@ -362,7 +517,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
                 <TouchableOpacity
                     style={{
                         height: wp(12), flexDirection: 'row',
-                        alignItems: 'center', justifyContent: 'center', marginVertical: wp(1)
+                        alignItems: 'center', justifyContent: 'center', marginVertical: wp(1),
                     }}
                     onPress={() => playAudio(item.audioUrl, item.title, item.audioImgColor)}>
                     <View style={{ flex: 0.15 }}>
@@ -383,13 +538,12 @@ const Audios: React.FC<any> = ({ navigation }) => {
                             <Image source={images.verticalDots} style={{ height: wp(4), width: wp(4), }} />
                         </TouchableOpacity>
                     </View>
-
                 </TouchableOpacity>
                 {menuVisibleList[index] && openMenuIndex === index && (
                     <View style={{
                         position: 'absolute',
-                        top: wp(3),
-                        right: wp(3),
+                        bottom: wp(1),
+                        right: wp(4),
                         borderRadius: wp(1),
                         backgroundColor: 'white',
                         padding: wp(1),
@@ -400,15 +554,15 @@ const Audios: React.FC<any> = ({ navigation }) => {
                                 onPress={() => shareAudio(`${Config.BASE_URL}${item?.audioUrl}`)}
                                 style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Image source={images.shareBlack} style={{ height: wp(3), width: wp(3), resizeMode: 'contain' }} />
-                                <Text style={{ color: 'black', paddingHorizontal: wp(2), fontFamily: fonts.poppins_regular,fontSize:wp(3.5) }}>Share</Text>
+                                <Text style={{ color: 'black', paddingHorizontal: wp(2), fontFamily: fonts.poppins_regular, fontSize: wp(3.5) }}>Share</Text>
                             </TouchableOpacity>
                         </View>
                         <View>
                             <TouchableOpacity
                                 onPress={() => downloadAudio(`${Config.BASE_URL}${item?.audioUrl}`)}
-                                style={{ flexDirection: 'row', alignItems: 'center'}}>
+                                style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Image source={images.downloadBlack} style={{ height: wp(3), width: wp(3), resizeMode: 'contain' }} />
-                                <Text style={{ color: 'black', paddingHorizontal: wp(2), fontFamily: fonts.poppins_regular,fontSize:wp(3.5) }}>Download</Text>
+                                <Text style={{ color: 'black', paddingHorizontal: wp(2), fontFamily: fonts.poppins_regular, fontSize: wp(3.5) }}>Download</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -417,7 +571,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
         );
     };
 
-    console.log('AudioData length:', AudioData);
+    // console.log('AudioData length:', AudioData);
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaView style={{ backgroundColor: '#121212', flex: 1, paddingHorizontal: wp(3) }}>
@@ -459,8 +613,8 @@ const Audios: React.FC<any> = ({ navigation }) => {
                                 // />
                                 <View
                                     //  onPress={() => setModalVisible(true)} 
-                                    style={{ padding: wp(1), flexDirection: 'column' }}>
-                                    <View style={style.container}>
+                                    style={{ padding: wp(1), flexDirection: 'column', }}>
+                                    <View style={[style.container, { backgroundColor: selectedAudio.audioImgColor }]}>
                                         <View style={{ flex: 0.1 }}>
                                             <Image source={{ uri: `${Config.BASE_URL}${selectedAudio.audioImg}` }}
                                                 style={{ height: wp(9), width: wp(9), }} />
@@ -474,11 +628,6 @@ const Audios: React.FC<any> = ({ navigation }) => {
                                                 <Text style={style.title}>{selectedAudio.title}</Text>
                                                 <Text style={style.desc}>{selectedAudio.author}</Text>
                                             </View>
-                                            {/* <ProgressBar
-                                            styleAttr="Horizontal"
-                                            indeterminate={false}
-                                            progress={isNaN(currentPosition) || isNaN(duration) ? 0 : currentPosition / duration}
-                                        /> */}
                                             <View style={{ flex: 0.4 }}>
 
                                                 <Slider
@@ -488,15 +637,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
                                                     value={seebBar()}
                                                     minimumTrackTintColor='white'
                                                     maximumTrackTintColor='white'
-                                                    thumbTintColor='red'
-                                                    onValueChange=
-                                                    // {setSliderPosition}
-                                                    {value => {
-                                                        setCurrentPosition(
-                                                            value
-                                                        )
-
-                                                    }}
+                                                    thumbTintColor='transparent'
                                                 />
                                             </View>
                                         </View>
@@ -519,11 +660,20 @@ const Audios: React.FC<any> = ({ navigation }) => {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}>
-                <View style={{ flex: 1, backgroundColor: selectedAudio?.audioImgColor }}>
+                <LinearGradient
+                    colors={['#000000', '#000000', selectedAudio?.audioImgColor]} // Example gradient colors
+                    start={{ x: 0, y: 2.2 }} // Gradient start point
+                    end={{ x: 0, y: 0 }}   // Gradient end point
+                    style={{ flex: 1, }}
+                >
+
+
+                    {/* <View style={{ flex: 1, backgroundColor: selectedAudio?.audioImgColor }}
+                > */}
                     <View style={styles.modalTop}>
                         <View style={styles.modalTopArrow}>
                             <TouchableOpacity style={{}} onPress={() => setModalVisible(false)}>
-                                <Image source={images.downArrow} style={{ height: wp(4), width: wp(4) }} />
+                                <Image source={images.downArrow} style={{ height: wp(5), width: wp(5) }} />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.modalTopText}>
@@ -565,12 +715,17 @@ const Audios: React.FC<any> = ({ navigation }) => {
                                         maximumTrackTintColor='white'
                                         thumbTintColor='transparent'
                                         // '#B036C1'
+                                        // onSlidingStart={(val) => {console.log("chf", val)
+                                        // }}
 
-                                        onValueChange={value => {
-                                            setCurrentPosition(
+                                        onSlidingComplete=
+                                        // {debouncedSetSliderPosition}
+                                        {value => {
+                                            setSliderPosition(
                                                 value
                                             )
                                         }}
+                                        onSlidingStart={() => setIsValue(false)}
                                     />
                                 </View>
                                 <View style={{ marginHorizontal: wp(0) }}>
@@ -594,13 +749,13 @@ const Audios: React.FC<any> = ({ navigation }) => {
                                 <TouchableOpacity onPress={playNextAudio}>
                                     <Image source={images.nextPlay} style={styles.modalNextPrev} />
                                 </TouchableOpacity>
-                                <TouchableOpacity >
+                                <TouchableOpacity onPress={playRandomTrack}>
                                     <Image source={images.link} style={styles.modalBottomSideIcons} />
                                 </TouchableOpacity>
                             </View>
                         </View>
                     </View>
-                </View>
+                </LinearGradient>
             </Modal>
             <RBSheet
                 ref={bottomSheetRef}
@@ -647,7 +802,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
 }
 const style = StyleSheet.create({
     container: {
-        backgroundColor: '#C12C73',
+        // backgroundColor: '#C12C73',
         // flex:0.2,
         // backgroundColor:'red',
         position: 'absolute',
