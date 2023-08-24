@@ -20,8 +20,6 @@ import Audios from '../src/screens/Audios';
 import { useSelector } from 'react-redux';
 import {AppState} from "../Redux/Reducer/Reducer"
 type Screen1RouteProp = RouteProp<TabNavigationParamList>;
-// type Screen2RouteProp = RouteProp<TabNavigationParamList, 'Screen2'>;
-// type Screen3RouteProp = RouteProp<TabNavigationParamList, 'Screen3'>;
 
 export type TabNavigationParamList = {
     Screen1: undefined;
@@ -71,7 +69,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ route }) => {
                                 <Image style={{ height: wp(5), width: wp(5), alignSelf: 'center', resizeMode:'contain' }} source={icon} />
                             </View>
                             <View>
-                                <Text style={{ color: 'white', fontSize: wp(2) }}>{iconName}</Text>
+                                <Text style={{ color: 'white', fontSize: wp(2.5) }}>{iconName}</Text>
 
                                 {focused ?
                                 <View style={{height:wp(0.5), backgroundColor:'white'}}></View>

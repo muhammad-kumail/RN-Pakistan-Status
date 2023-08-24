@@ -81,7 +81,6 @@ const Audios: React.FC<any> = ({ navigation }) => {
     const [isvalue, setIsValue] = useState(true);
     const [isPlaying, setIsPlaying] = useState(true);
     // const playbackState = usePlaybackState();
-
     // Initialize the menuVisibleList with false values when AudioData changes
     // useEffect(() => {
     //     setMenuVisibleList(Array(AudioData.length).fill(false));
@@ -90,7 +89,23 @@ const Audios: React.FC<any> = ({ navigation }) => {
         if (AudioData) {
             setMenuVisibleList(Array(AudioData.length).fill(false));
         }
-    }, [AudioData]);
+        try{
+            console.log(currentPosition.toFixed(1), "position");
+            console.log(duration.toFixed(1), " duration");
+          
+            if(currentPosition.toFixed(1)===duration.toFixed(1)){
+                setIsPlaying(false)
+                console.log("stop now");
+            }
+            else{
+                setIsPlaying(true)
+            }
+        }
+        catch{
+            console.log("error in to stop audio");
+            
+        }
+    }, [AudioData,currentPosition]);
 
 
     const formatDuration = (seconds: number) => {
@@ -105,12 +120,13 @@ const Audios: React.FC<any> = ({ navigation }) => {
     };
     const seebBar = () => {
         if (currentPosition !== null && duration !== null && duration !== 0) {
-            console.log(currentPosition, "position");
-            // console.log(duration, " duration");
-
+            // console.log(currentPosition.toFixed(1), "position");
+            // console.log(duration.toFixed(1), " duration");
+          
             // console.log(currentPosition / duration,"position/duration")
             return currentPosition / duration;
         }
+       
         return 0;
     }
     const toggleMenu = (index: number) => {
@@ -224,7 +240,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
                 const response = await getHomeAudios();
                 SetAudioData(response?.data);
                 // setAudioTitles(response?.data?.title)
-                console.log(response?.data?.title, "0909090909090")
+                // console.log(response?.data?.title, "0909090909090")
             } catch (error) {
                 console.error('Error fetching audio data:', error);
             }
@@ -237,6 +253,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
             setIsPlaying(true)
 
         }
+       
     }, [isFocused]);
     // useEffect(() => {
     //     TrackPlayer.setupPlayer().then(() => {
@@ -268,6 +285,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
                 // setCurrentPosition(newPosition);
             };
             const progressInterval = setInterval(updatePosition, 1000);
+
             return () => clearInterval(progressInterval);
         }
         else {
@@ -316,6 +334,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
     };
     const handleRepeat = async () => {
         if (selectedAudio) {
+            setIsPlaying(true)
             await TrackPlayer.reset()
             await setupAndPlayTrack(selectedAudio);
         }
@@ -365,6 +384,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
         if (selectedAudioIndex !== null && selectedAudioIndex < AudioData.length - 1) {
             const nextIndex = selectedAudioIndex + 1;
             const nextAudio = AudioData[nextIndex];
+            setIsPlaying(true)
             if (nextAudio) {
                 NextPrevAudio(nextAudio.audioUrl, nextAudio.title, nextAudio);
             }
@@ -374,6 +394,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
         if (selectedAudioIndex !== null && selectedAudioIndex > 0) {
             const prevIndex = selectedAudioIndex - 1;
             const prevAudio = AudioData[prevIndex];
+            setIsPlaying(true)
             if (prevAudio) {
                 NextPrevAudio(prevAudio.audioUrl, prevAudio.title, prevAudio);
             }
@@ -407,23 +428,25 @@ const Audios: React.FC<any> = ({ navigation }) => {
             await TrackPlayer.reset(); // Clear previous tracks
             await TrackPlayer.add([track]);
             await TrackPlayer.play();
+            setIsPlaying(true)
             setSelectedAudio(randomTrack)
+            setFocusedItemId(randomTrack._id);
         } catch (error) {
             console.error('Error playing random track:', error);
         }
     };
-    // const updateOptions = () => {
-    //     let options = {
-    //         stopWithApp: true,
-    //         playIcon: images.play,
-    //         pauseIcon: images.pauseWhite,
-    //         previousIcon: images.previousPlay,
-    //         nextIcon: images.nextPlay,
-    //         color: '#FA3843'
-    //     };
+    const updateOptions = () => {
+        let options = {
+            stopWithApp: true,
+            playIcon: images.play,
+            pauseIcon: images.pauseWhite,
+            previousIcon: images.previousPlay,
+            nextIcon: images.nextPlay,
+            color: '#FA3843'
+        };
 
-    //     TrackPlayer.updateOptions(options).then(() => console.log('capabilities set'));
-    // }
+        TrackPlayer.updateOptions(options).then(() => console.log('capabilities set'));
+    }
     // const setupTrackPlayer = async (audioUrl: string, title: string, audioImgColor: string) => {
     //     // Initialize TrackPlayer
     //     console.log("this is console logg okkkk");
@@ -497,6 +520,10 @@ const Audios: React.FC<any> = ({ navigation }) => {
             setSelectedAudio(item);
             setFocusedItemId(item._id);
             setIsPlaying(true)
+            updateOptions()
+            const repeatMode= await TrackPlayer.getRepeatMode()
+            console.log(repeatMode," repeat mode");
+            
             // setupTrackPlayer(audioUrl, title, audioImgColor);
             console.log('Playback started---:', `${Config.BASE_URL}${audioUrl}`);
             const newPosition = await TrackPlayer.getPosition();
@@ -505,7 +532,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
             setDuration(newDuration);
             // console.log("position", newPosition);
             // console.log("duration", newDuration);
-
+            
             const selectedAudioIndex = AudioData.findIndex(item => item.audioUrl === audioUrl);
             if (selectedAudioIndex !== -1) {
                 setSelectedAudioIndex(selectedAudioIndex);
@@ -600,7 +627,6 @@ const Audios: React.FC<any> = ({ navigation }) => {
                         />
                     </View>
                     <View >
-
                         <TouchableOpacity onPress={() => setModalVisible(true)}>
                             {selectedAudio === null ? null : (
                                 // <AudioPlayerInfo
@@ -673,11 +699,11 @@ const Audios: React.FC<any> = ({ navigation }) => {
                     <View style={styles.modalTop}>
                         <View style={styles.modalTopArrow}>
                             <TouchableOpacity style={{}} onPress={() => setModalVisible(false)}>
-                                <Image source={images.downArrow} style={{ height: wp(5), width: wp(5) }} />
+                                <Image source={images.downArrow} style={{ height: wp(4), width: wp(4) }} />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.modalTopText}>
-                            <Text style={{ color: 'white', fontFamily: fonts.poppins_regular, fontSize: wp(3) }}>Playing Form Playlist</Text>
+                            <Text style={{ color: 'white', fontFamily: fonts.poppins_regular, fontSize: wp(4) }}>Playing Form Playlist</Text>
                         </View>
                         <View style={styles.modalTopOption}>
                             <TouchableOpacity style={{}} onPress={() => openBottomSheet(selectedAudio?.audioImg, selectedAudio?.title, selectedAudio?.author)} >
@@ -761,7 +787,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
                 ref={bottomSheetRef}
                 closeOnDragDown={true}
                 animationType="slide"
-                height={wp(40)}
+                height={wp(50)}
                 customStyles={{
                     container: {
                         backgroundColor: '#121212',
@@ -770,7 +796,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
                     },
                 }}>
                 <View style={{ flexDirection: 'column', marginHorizontal: wp(7), flex: 1 }}>
-                    <View style={{ flexDirection: 'row', flex: 0.6, alignItems: 'center' }}>
+                    <View style={{ flexDirection: 'row', flex: 0.5, alignItems: 'center' }}>
                         <View style={{ flex: 0.15 }}>
                             <Image source={{ uri: `${Config.BASE_URL}${selectedAudio?.audioImg}` }}
                                 style={{ height: wp(12), width: wp(12), }} />
@@ -780,15 +806,15 @@ const Audios: React.FC<any> = ({ navigation }) => {
                             <Text style={{ color: 'grey', fontSize: wp(2) }}>{selectedAudio?.author}</Text>
                         </View>
                     </View>
-                    <View style={{ flex: 0.4, justifyContent: 'center', }}>
+                    <View style={{ flex: 0.5, justifyContent: 'center', }}>
                         <View style={{ flex: 0.5 }} >
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={() => shareAudio(`${Config.BASE_URL}${selectedAudio?.audioUrl}`)} style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Image source={images.shareWhite} style={{ height: wp(4), width: wp(4), resizeMode: 'contain' }} />
                                 <Text style={{ color: 'white', paddingHorizontal: wp(3), fontFamily: fonts.poppins_regular }}>Share</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ flex: 0.5 }}>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={() => downloadAudio(`${Config.BASE_URL}${selectedAudio?.audioUrl}`)} style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Image source={images.downloadWhite} style={{ height: wp(4), width: wp(4), resizeMode: 'contain' }} />
                                 <Text style={{ color: 'white', paddingHorizontal: wp(3), fontFamily: fonts.poppins_regular }}>Download</Text>
                             </TouchableOpacity>
