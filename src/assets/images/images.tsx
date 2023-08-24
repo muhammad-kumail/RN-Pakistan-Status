@@ -27,7 +27,7 @@ const images = {
   cancel:require('./cancel.png'),
   shareBlack:require('./shareBlack.png'),
   downloadBlack:require('./downloadBlack.png'),
-  downArrow:require('./down-arrow.png'),
+  down_Arrow:require('./down-arrow.png'),
   verticalDotsWhite:require('./verticalDotsWhite.png'),
   nextPlay:require('./nextPlay.png'),
   previousPlay:require('./previousPlay.png'),

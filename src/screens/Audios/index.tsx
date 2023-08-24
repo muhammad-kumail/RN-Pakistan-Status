@@ -699,7 +699,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
                     <View style={styles.modalTop}>
                         <View style={styles.modalTopArrow}>
                             <TouchableOpacity style={{}} onPress={() => setModalVisible(false)}>
-                                <Image source={images.downArrow} style={{ height: wp(4), width: wp(4) }} />
+                                <Image source={images.down_Arrow} style={{ height: wp(4), width: wp(4) }} />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.modalTopText}>
