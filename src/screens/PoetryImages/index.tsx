@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, SafeAreaView, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity, Text, Alert } from 'react-native';
+import { View, SafeAreaView, FlatList, Image, StyleSheet, PermissionsAndroid, TouchableOpacity, Text, Alert, Linking } from 'react-native';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -34,84 +34,106 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
 
     const downloadImage = async (imageUrl: string) => {
         try {
-            const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
-
-            if (permissionStatus === 'granted') {
-
-                const downloadDir = RNFS.DownloadDirectoryPath;
-                const filename = `downloaded-image-${Date.now()}.jpg`;
-                const filePath = `${downloadDir}/${filename}`;
-
-                try {
-                    const response = await RNFS.downloadFile({
-                        fromUrl: imageUrl,
-                        toFile: filePath,
-                    });
-
-                    if (response) {
-                        console.log('Image downloaded to:', filePath);
-                        Alert.alert('Image downloaded successfully!');
-                    } else {
-                        console.error('Image download failed with status:', response);
-                        Alert.alert('Image download failed!');
-                    }
-                } catch (error) {
-                    console.error('Error downloading image:', error);
-                    Alert.alert('Error downloading image!');
+            // const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
+            // if (permissionStatus === PermissionsAndroid.RESULTS.GRANTED) {
+            const downloadDir = RNFS.DownloadDirectoryPath;
+            const filename = `downloaded-image-${Date.now()}.jpg`;
+            const filePath = `${downloadDir}/${filename}`;
+            try {
+                const response = await RNFS.downloadFile({
+                    fromUrl: imageUrl,
+                    toFile: filePath,
+                });
+                if (response) {
+                    console.log('Image downloaded to:', filePath);
+                    Alert.alert('Image downloaded successfully!');
+                } else {
+                    console.error('Image download failed with status:', response);
+                    Alert.alert('Image download failed!');
                 }
-            } else {
-                console.log('Permission denied');
+            } catch (error) {
+                console.error('Error downloading image:', error);
+                Alert.alert('Error downloading image!');
             }
+            // } else {
+            //     console.log('Permission denied');
+            // }
         } catch (error) {
             console.error('Error requesting permission:', error);
         }
     };
-
+    const openSettings = () => {
+        Linking.openSettings();
+    };
     const shareImageOnWhatsApp = async (url: any) => {
         try {
-            const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
+            // const permissionStatus = await PermissionsAndroid.request(
+            //     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE );
+            //     console.log(permissionStatus,"get permission beta");
+            // if (permissionStatus === PermissionsAndroid.RESULTS.GRANTED) {
+            //     console.log('Storage Permission Granted.');
+            //   } else if (permissionStatus === PermissionsAndroid.RESULTS.DENIED) {
+            //     // console.log('Storage Permission Denied.');
+            //     Alert.alert(
+            //         'Storage Permission Required',
+            //         'App needs access to your storage to read files. Please go to app settings and grant permission.',
+            //         [
+            //           { text: 'Cancel', style: 'cancel' },
+            //           { text: 'Open Settings', onPress: openSettings },
+            //         ],
+            //       );
+            //   } else if (permissionStatus === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+            //     console.log('Storage Permission Denied with Never Ask Again.');
+            //     Alert.alert(
+            //       'Storage Permission Required',
+            //       'App needs access to your storage to read files. Please go to app settings and grant permission.',
+            //       [
+            //         { text: 'Cancel', style: 'cancel' },
+            //         { text: 'Open Settings', onPress: openSettings },
+            //       ],
+            //     );
+            //   }
+            // if (permissionStatus === PermissionsAndroid.RESULTS.GRANTED) {
 
-            if (permissionStatus === 'granted') {
+            const downloadDir = RNFS.DownloadDirectoryPath;
+            const filename = `downloaded-image-${Date.now()}.jpg`;
+            const filePath = `${downloadDir}/${filename}`;
 
-                const downloadDir = RNFS.DownloadDirectoryPath;
-                const filename = `downloaded-image-${Date.now()}.jpg`;
-                const filePath = `${downloadDir}/${filename}`;
+            try {
+                const response = await RNFS.downloadFile({
+                    fromUrl: url,
+                    toFile: filePath,
+                });
 
-                try {
-                    const response = await RNFS.downloadFile({
-                        fromUrl: url,
-                        toFile: filePath,
-                    });
-
-                    if (response) {
-                        console.log('Image downloaded to:', filePath);
-                        try {
-                            const image = filePath; // Replace with the actual path to your image
-                            const shareOptions = {
-                                title: 'Share via WhatsApp',
-                                url: `file://${image}`,
-                                failOnCancel: false,
-                                showAppsToView: ['whatsapp'],
-                                social: Share.Social.WHATSAPP,
-                            };
-                            console.log(shareOptions.url, "----")
-                            // await Share.open(shareOptions);
-                            await Share.shareSingle(shareOptions);
-                        } catch (error) {
-                            console.error('Error sharing image on WhatsApp:', error.message);
-                        }
-                        Alert.alert('Image downloaded successfully!');
-                    } else {
-                        console.error('Image download failed with status:', response);
-                        Alert.alert('Image download failed!');
+                if (response) {
+                    console.log('Image downloaded to:', filePath);
+                    try {
+                        const image = filePath; // Replace with the actual path to your image
+                        const shareOptions = {
+                            title: 'Share via WhatsApp',
+                            url: `file://${image}`,
+                            failOnCancel: false,
+                            showAppsToView: ['whatsapp'],
+                            social: Share.Social.WHATSAPP,
+                        };
+                        console.log(shareOptions.url, "----")
+                        // await Share.open(shareOptions);
+                        await Share.shareSingle(shareOptions);
+                    } catch (error) {
+                        console.error('Error sharing image on WhatsApp:', error.message);
                     }
-                } catch (error) {
-                    console.error('Error downloading image:', error);
-                    Alert.alert('Error downloading image!');
+                    Alert.alert('Image downloaded successfully!');
+                } else {
+                    console.error('Image download failed with status:', response);
+                    Alert.alert('Image download failed!');
                 }
-            } else {
-                console.log('Permission denied');
+            } catch (error) {
+                console.error('Error downloading image:', error);
+                Alert.alert('Error downloading image!');
             }
+            // } else {
+            //     console.log('Permission denied');
+            // }
         } catch (error) {
             console.error('Error requesting permission:', error);
         }

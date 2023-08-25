@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: wp(4),
         fontWeight: 'bold',
-
     },
     desc: {
         fontSize: wp(3),
