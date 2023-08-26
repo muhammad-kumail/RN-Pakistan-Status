@@ -6,9 +6,9 @@ import images from '../../assets/images/images';
 import { SafeAreaView } from 'react-native';
 // import Sound = require('react-native-sound');
 import TrackPlayer, { usePlaybackState } from 'react-native-track-player';
-import { Button } from 'react-native';
+// import { Button } from 'react-native';
 import Config from '../../utils/config';
-import AudioPlayerInfo from './AudioPlayerInfo';
+// import AudioPlayerInfo from './AudioPlayerInfo';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,18 +21,18 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { SearchBar } from 'react-native-screens';
+// import { SearchBar } from 'react-native-screens';
 import { useIsFocused } from '@react-navigation/native';
 // import BottomSheet from '@gorhom/bottom-sheet';
 // import RawBottomSheet from 'react-native-raw-bottom-sheet';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Share from 'react-native-share';
-import { MD3Colors, ProgressBar } from 'react-native-paper';
-import * as Progress from 'react-native-progress';
+// import { MD3Colors, ProgressBar } from 'react-native-paper';
+// import * as Progress from 'react-native-progress';
 // import { AppState } from '../../../Redux/Reducer/Reducer';
 import fonts from '../../assets/fonts/fonts';
 import styles from './styles';
-import { SlideInRight } from 'react-native-reanimated';
+// import { SlideInRight } from 'react-native-reanimated';
 import RNFS from 'react-native-fs'; // Import react-native-fs
 import { request } from 'react-native-permissions';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -89,23 +89,23 @@ const Audios: React.FC<any> = ({ navigation }) => {
         if (AudioData) {
             setMenuVisibleList(Array(AudioData.length).fill(false));
         }
-        try{
+        try {
             console.log(currentPosition.toFixed(1), "position");
             console.log(duration.toFixed(1), " duration");
-          
-            if(currentPosition.toFixed(1)===duration.toFixed(1)){
+
+            if (currentPosition.toFixed(1) === duration.toFixed(1)) {
                 setIsPlaying(false)
                 console.log("stop now");
             }
-            else{
+            else {
                 setIsPlaying(true)
             }
         }
-        catch{
+        catch {
             console.log("error in to stop audio");
-            
+
         }
-    }, [AudioData,currentPosition]);
+    }, [AudioData, currentPosition]);
 
 
     const formatDuration = (seconds: number) => {
@@ -122,11 +122,11 @@ const Audios: React.FC<any> = ({ navigation }) => {
         if (currentPosition !== null && duration !== null && duration !== 0) {
             // console.log(currentPosition.toFixed(1), "position");
             // console.log(duration.toFixed(1), " duration");
-          
+
             // console.log(currentPosition / duration,"position/duration")
             return currentPosition / duration;
         }
-       
+
         return 0;
     }
     const toggleMenu = (index: number) => {
@@ -137,13 +137,22 @@ const Audios: React.FC<any> = ({ navigation }) => {
                 return updatedMenuVisibleList;
             });
         }
-
         setOpenMenuIndex(index);
         setMenuVisibleList(prevMenuVisibleList => {
             const updatedMenuVisibleList = [...prevMenuVisibleList];
             updatedMenuVisibleList[index] = true;
             return updatedMenuVisibleList;
         });
+    };
+    const closeMenu = () => {
+        if (openMenuIndex !== null) {
+            // setMenuVisibleList((prevMenuVisibleList) => {
+            //     const updatedMenuVisibleList = [...prevMenuVisibleList];
+            //     updatedMenuVisibleList[openMenuIndex] = false;
+            //     return updatedMenuVisibleList;
+            // });
+            setOpenMenuIndex(null);
+        }
     };
     const shareAudio = async (url: string) => {
 
@@ -239,8 +248,9 @@ const Audios: React.FC<any> = ({ navigation }) => {
             try {
                 const response = await getHomeAudios();
                 SetAudioData(response?.data);
+
                 // setAudioTitles(response?.data?.title)
-                // console.log(response?.data?.title, "0909090909090")
+                // console.log(response?.data, "0909090909090")
             } catch (error) {
                 console.error('Error fetching audio data:', error);
             }
@@ -253,7 +263,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
             setIsPlaying(true)
 
         }
-       
+
     }, [isFocused]);
     // useEffect(() => {
     //     TrackPlayer.setupPlayer().then(() => {
@@ -314,12 +324,29 @@ const Audios: React.FC<any> = ({ navigation }) => {
     }
     const handleSearch = (text: string) => {
         setSearchQuery(text);
-        // console.log(audioTitles,"data of titless")
-        // const filtered = audioTitles.filter((item) =>
-        //     item.title.toLowerCase().includes(text.toLowerCase())
-        // );
+        // const audioTitles = AudioData.map(item => item.title);
+        // console.log(audioTitles, "data of titless")
+        const filtered = AudioData?.filter((item) =>
 
-        // setFilteredData(filtered);
+            item.title.toLowerCase().includes(text.toLowerCase()) ||
+            item.author.toLowerCase().includes(text.toLowerCase())
+        );
+        console.log(filtered,"filtered data")
+    //     const titleKeywords = text.toLowerCase().split(" ");
+    // const authorKeywords = text.toLowerCase().split(" ");
+
+    // const filtered = AudioData.filter(item =>
+    //     titleKeywords.some(keyword => item.title.toLowerCase().includes(keyword)) &&
+    //     authorKeywords.some(keyword => item.author.toLowerCase().includes(keyword))
+    // );
+    // const titleFirstLetter = text.toLowerCase().charAt(3);
+    // const authorFirstLetter = text.toLowerCase().charAt(3);
+
+    // const filtered = AudioData.filter(item =>
+    //     item.title.toLowerCase().startsWith(titleFirstLetter) &&
+    //     item.author.toLowerCase().startsWith(authorFirstLetter)
+    // );
+        setFilteredData(filtered);
     };
     const handlePlayPause = async () => {
         if (selectedAudio) {
@@ -444,7 +471,6 @@ const Audios: React.FC<any> = ({ navigation }) => {
             nextIcon: images.nextPlay,
             color: '#FA3843'
         };
-
         TrackPlayer.updateOptions(options).then(() => console.log('capabilities set'));
     }
     // const setupTrackPlayer = async (audioUrl: string, title: string, audioImgColor: string) => {
@@ -484,6 +510,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
 
         const isFocused = focusedItemId === item._id;
         const playAudio = async (audioUrl: string, title: string, audioImgColor: string) => {
+            closeMenu()
             const track = {
                 id: audioUrl,
                 url: `${Config.BASE_URL}${audioUrl}`,
@@ -510,7 +537,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
             //     TrackPlayer.play();
             //     // this.getTracksFromApi()
             // });
-            console.log("------------", `${Config.BASE_URL}${item.audioImg}`);
+            console.log("------image------", `${Config.BASE_URL}${item.audioImg}`);
             await TrackPlayer.reset();
             console.log(`${Config.BASE_URL}/${audioUrl}`);
             await TrackPlayer.add([track]);
@@ -521,9 +548,9 @@ const Audios: React.FC<any> = ({ navigation }) => {
             setFocusedItemId(item._id);
             setIsPlaying(true)
             updateOptions()
-            const repeatMode= await TrackPlayer.getRepeatMode()
-            console.log(repeatMode," repeat mode");
-            
+            const repeatMode = await TrackPlayer.getRepeatMode()
+            console.log(repeatMode, " repeat mode");
+
             // setupTrackPlayer(audioUrl, title, audioImgColor);
             console.log('Playback started---:', `${Config.BASE_URL}${audioUrl}`);
             const newPosition = await TrackPlayer.getPosition();
@@ -532,7 +559,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
             setDuration(newDuration);
             // console.log("position", newPosition);
             // console.log("duration", newDuration);
-            
+
             const selectedAudioIndex = AudioData.findIndex(item => item.audioUrl === audioUrl);
             if (selectedAudioIndex !== -1) {
                 setSelectedAudioIndex(selectedAudioIndex);
@@ -552,7 +579,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
                             style={{ height: wp(12), width: wp(12), }} />
                     </View>
                     <View style={{ flex: 0.7, zIndex: 0 }}>
-                        <Text numberOfLines={1} style={{ color: isFocused && (selectedAudio !== null) ? '#B036C1' : 'white', fontSize: wp(4), marginBottom: hp(1) }}>{item.title}</Text>
+                        <Text numberOfLines={1} style={{ color: isFocused && (selectedAudio !== null) ? '#B036C1' : 'white', fontSize: wp(4), marginBottom: wp(0.7) }}>{item.title}</Text>
                         <Text style={{ color: 'grey', fontSize: wp(3) }}>{item.author}</Text>
                     </View>
                     <View style={{
@@ -610,7 +637,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
                             navigation.goBack();
                         }}
                     />
-                    <View style={{ flex: 0.06, justifyContent: 'center', }}>
+                    <View style={{ flex: 0.1, justifyContent: 'center'}}>
                         <TextInput
                             style={styles.searchBarText}
                             placeholder="Find in Playlist"
@@ -619,9 +646,9 @@ const Audios: React.FC<any> = ({ navigation }) => {
                         />
                         <Icon name="search" size={20} style={styles.searchBarIcon} />
                     </View>
-                    <View style={{ flex: 0.94 }}>
+                    <View style={{ flex: 0.9 }}>
                         <FlatList
-                            data={AudioData}
+                            data={searchQuery.length > 0 ? filteredData : AudioData}
                             renderItem={renderItem}
                             keyExtractor={(item) => item._id}
                         />
