@@ -108,7 +108,7 @@ dependencies {
     // implementation("com.facebook.react:react-android")
     implementation 'com.facebook.react:react-native:0.60' // Use the appropriate version
     //    implementation project(':react-native-audio-streaming') 
-
+    implementation project(':react-native-share')
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.squareup.okhttp3', module:'okhttp'

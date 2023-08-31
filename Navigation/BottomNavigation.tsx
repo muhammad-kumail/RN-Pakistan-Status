@@ -19,6 +19,7 @@ import {
 import Audios from '../src/screens/Audios';
 import { useSelector } from 'react-redux';
 import {AppState} from "../Redux/Reducer/Reducer"
+import ForYou2 from '../src/screens/ForYouScreen2';
 type Screen1RouteProp = RouteProp<TabNavigationParamList>;
 
 export type TabNavigationParamList = {
@@ -99,7 +100,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ route }) => {
             })}
         >
             <Tab.Screen name="Homee" component={Home} />
-            <Tab.Screen name="ForYou" component={ForYou} />
+            <Tab.Screen name="ForYou" component={ForYou2} />
             <Tab.Screen 
                 name="Audio" 
                 component={Audios} 

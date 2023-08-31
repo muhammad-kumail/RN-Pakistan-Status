@@ -98,7 +98,7 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
             const downloadDir = RNFS.DownloadDirectoryPath;
             const filename = `downloaded-image-${Date.now()}.jpg`;
             const filePath = `${downloadDir}/${filename}`;
-
+            
             try {
                 const response = await RNFS.downloadFile({
                     fromUrl: url,

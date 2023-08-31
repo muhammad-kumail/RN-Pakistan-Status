@@ -74,7 +74,7 @@ const ForYou = () => {
     const videos = async () => {
       try {
         const response = await getHomeVides();
-        SetVideoData(response?.data?.videoContents);
+        SetVideoData(response?.data?.ranVideo);
         console.log(response?.data)
       } catch (error) {
         console.error('Error fetching video data:', error);
@@ -99,7 +99,7 @@ const ForYou = () => {
           // 'android.permission.WRITE_EXTERNAL_STORAGE'
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
         );
-        if (permissionStatus === 'granted') {
+        // if (permissionStatus === 'granted') {
 
 
           // if (videoDownloading) {
@@ -140,9 +140,9 @@ const ForYou = () => {
           //     } finally {
           //       setVideoDownloading(false); // Set to false when the download is complete or an error occurs
           //     }
-        } else {
-          console.log('Permission denied');
-        }
+        // } else {
+        //   console.log('Permission denied');
+        // }
       } catch (error) {
         console.error('Error requesting permission:', error);
       }
@@ -177,7 +177,7 @@ const ForYou = () => {
         console.log("whtsapp---");
         const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
 
-        if (permissionStatus === 'granted') {
+        // if (permissionStatus === 'granted') {
           const videoUrl = Config.BASE_URL + item.mediaUrl;
           const downloadDir = RNFS.DownloadDirectoryPath;
           const filename = `downloaded-video-${Date.now()}.mp4`;
@@ -214,9 +214,9 @@ const ForYou = () => {
             console.error('Error downloading image:', error);
             Alert.alert('Error downloading image!');
           }
-        } else {
-          console.log('Permission denied');
-        }
+        // } else {
+        //   console.log('Permission denied');
+        // }
       } catch (error) {
         console.error('Error requesting permission:', error);
       }
@@ -227,7 +227,7 @@ const ForYou = () => {
         console.log("whtsapp---");
         const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
 
-        if (permissionStatus === 'granted') {
+        // if (permissionStatus === 'granted') {
           const videoUrl = Config.BASE_URL + item.mediaUrl;
           const downloadDir = RNFS.DownloadDirectoryPath;
           const filename = `downloaded-video-${Date.now()}.mp4`;
@@ -264,9 +264,9 @@ const ForYou = () => {
             console.error('Error downloading image:', error);
             Alert.alert('Error downloading image!');
           }
-        } else {
-          console.log('Permission denied');
-        }
+        // } else {
+        //   console.log('Permission denied');
+        // }
       } catch (error) {
         console.error('Error requesting permission:', error);
       }
