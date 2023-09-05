@@ -63,7 +63,7 @@ const ProfileImages: React.FC<any> = ({ navigation }) => {
             const response = await getProfileImgs();
             setImages(response?.data);
             console.log(response?.data[0]?.imgUrl);
-            console.log("data", `${Config.BASE_URL}${image[3]?.imgUrl}`)
+            console.log("data", `${image[3]?.imgUrl}`)
             console.log("images data: ", response?.data)
         } catch (error) {
             console.error('Error fetching images data:', error);
@@ -102,74 +102,6 @@ const ProfileImages: React.FC<any> = ({ navigation }) => {
         //   }
         // }
     };
-    const imageArray = [
-        'https://wallpapers.com/images/featured/beautiful-3vau5vtfa3qn7k8v.jpg',
-        'https://e0.pxfuel.com/wallpapers/675/1019/desktop-wallpaper-97405-serene-landcapes-background.jpg',
-        'https://images.pexels.com/photos/1187079/pexels-photo-1187079.jpeg?cs=srgb&dl=pexels-artem-saranin-1187079.jpg&fm=jpg',
-        'https://images.pexels.com/photos/1887624/pexels-photo-1887624.jpeg?cs=srgb&dl=pexels-tobias-bj%C3%B8rkli-1887624.jpg&fm=jpg',
-        'https://i.pinimg.com/236x/4c/56/14/4c5614387832a1aa00893dd750c80064.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0LFFqggoNdREiNl5tj_2d0TwWQRcVhpt9bQ&usqp=CAU',
-        'https://w0.peakpx.com/wallpaper/755/492/HD-wallpaper-flowering-dewdrops-pretty-cool-blade-of-grass-bubbles-unique.jpg',
-        'https://t4.ftcdn.net/jpg/05/57/57/63/360_F_557576322_am5DuFwdo7GNMlKh3kCfTvKVxDMaKPNL.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7CBkS7_dGnRZvFT6QaEdlcKp1OrB9srTTlLBzytFrmEXJ_Zruwr6lsQvlyX9xOPJpN3o&usqp=CAU',
-        'https://c4.wallpaperflare.com/wallpaper/431/451/684/the-most-beautiful-picture-of-nature-wallpaper-preview.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIim_X8iriwbS7Oj60j4zUDqTpCZxuY3iMKDNXY6O5S_CJll5KecFRv8I-OhFS4bWwhWY&usqp=CAU',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi1GOR5gX-UMuh1TfpD88SKaKSQ0toLcY3YQ&usqp=CAU',
-        'https://e0.pxfuel.com/wallpapers/192/1/desktop-wallpaper-rose-splash-rose-flower-love-splash-water.jpg',
-        'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022_640.jpg',
-        'https://c4.wallpaperflare.com/wallpaper/736/96/920/beautiful-unicorn-in-forest-fantasy-computer-desktop-wallpapers-hd-2560%C3%971600-wallpaper-preview.jpg',
-        'https://wallpapers.com/images/featured/beautiful-3vau5vtfa3qn7k8v.jpg',
-        'https://e0.pxfuel.com/wallpapers/675/1019/desktop-wallpaper-97405-serene-landcapes-background.jpg',
-        'https://images.pexels.com/photos/1187079/pexels-photo-1187079.jpeg?cs=srgb&dl=pexels-artem-saranin-1187079.jpg&fm=jpg',
-        'https://images.pexels.com/photos/1887624/pexels-photo-1887624.jpeg?cs=srgb&dl=pexels-tobias-bj%C3%B8rkli-1887624.jpg&fm=jpg',
-        'https://i.pinimg.com/236x/4c/56/14/4c5614387832a1aa00893dd750c80064.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0LFFqggoNdREiNl5tj_2d0TwWQRcVhpt9bQ&usqp=CAU',
-        'https://w0.peakpx.com/wallpaper/755/492/HD-wallpaper-flowering-dewdrops-pretty-cool-blade-of-grass-bubbles-unique.jpg',
-        'https://t4.ftcdn.net/jpg/05/57/57/63/360_F_557576322_am5DuFwdo7GNMlKh3kCfTvKVxDMaKPNL.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7CBkS7_dGnRZvFT6QaEdlcKp1OrB9srTTlLBzytFrmEXJ_Zruwr6lsQvlyX9xOPJpN3o&usqp=CAU',
-        'https://c4.wallpaperflare.com/wallpaper/431/451/684/the-most-beautiful-picture-of-nature-wallpaper-preview.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIim_X8iriwbS7Oj60j4zUDqTpCZxuY3iMKDNXY6O5S_CJll5KecFRv8I-OhFS4bWwhWY&usqp=CAU',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi1GOR5gX-UMuh1TfpD88SKaKSQ0toLcY3YQ&usqp=CAU',
-        'https://e0.pxfuel.com/wallpapers/192/1/desktop-wallpaper-rose-splash-rose-flower-love-splash-water.jpg',
-        'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022_640.jpg',
-        'https://c4.wallpaperflare.com/wallpaper/736/96/920/beautiful-unicorn-in-forest-fantasy-computer-desktop-wallpapers-hd-2560%C3%971600-wallpaper-preview.jpg',
-        'https://wallpapers.com/images/featured/beautiful-3vau5vtfa3qn7k8v.jpg',
-        'https://e0.pxfuel.com/wallpapers/675/1019/desktop-wallpaper-97405-serene-landcapes-background.jpg',
-        'https://images.pexels.com/photos/1187079/pexels-photo-1187079.jpeg?cs=srgb&dl=pexels-artem-saranin-1187079.jpg&fm=jpg',
-        'https://images.pexels.com/photos/1887624/pexels-photo-1887624.jpeg?cs=srgb&dl=pexels-tobias-bj%C3%B8rkli-1887624.jpg&fm=jpg',
-        'https://i.pinimg.com/236x/4c/56/14/4c5614387832a1aa00893dd750c80064.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0LFFqggoNdREiNl5tj_2d0TwWQRcVhpt9bQ&usqp=CAU',
-        'https://w0.peakpx.com/wallpaper/755/492/HD-wallpaper-flowering-dewdrops-pretty-cool-blade-of-grass-bubbles-unique.jpg',
-        'https://t4.ftcdn.net/jpg/05/57/57/63/360_F_557576322_am5DuFwdo7GNMlKh3kCfTvKVxDMaKPNL.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7CBkS7_dGnRZvFT6QaEdlcKp1OrB9srTTlLBzytFrmEXJ_Zruwr6lsQvlyX9xOPJpN3o&usqp=CAU',
-        'https://c4.wallpaperflare.com/wallpaper/431/451/684/the-most-beautiful-picture-of-nature-wallpaper-preview.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIim_X8iriwbS7Oj60j4zUDqTpCZxuY3iMKDNXY6O5S_CJll5KecFRv8I-OhFS4bWwhWY&usqp=CAU',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi1GOR5gX-UMuh1TfpD88SKaKSQ0toLcY3YQ&usqp=CAU',
-        'https://e0.pxfuel.com/wallpapers/192/1/desktop-wallpaper-rose-splash-rose-flower-love-splash-water.jpg',
-        'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022_640.jpg',
-        'https://c4.wallpaperflare.com/wallpaper/736/96/920/beautiful-unicorn-in-forest-fantasy-computer-desktop-wallpapers-hd-2560%C3%971600-wallpaper-preview.jpg',
-        'https://wallpapers.com/images/featured/beautiful-3vau5vtfa3qn7k8v.jpg',
-        'https://e0.pxfuel.com/wallpapers/675/1019/desktop-wallpaper-97405-serene-landcapes-background.jpg',
-        'https://images.pexels.com/photos/1187079/pexels-photo-1187079.jpeg?cs=srgb&dl=pexels-artem-saranin-1187079.jpg&fm=jpg',
-        'https://images.pexels.com/photos/1887624/pexels-photo-1887624.jpeg?cs=srgb&dl=pexels-tobias-bj%C3%B8rkli-1887624.jpg&fm=jpg',
-        'https://i.pinimg.com/236x/4c/56/14/4c5614387832a1aa00893dd750c80064.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0LFFqggoNdREiNl5tj_2d0TwWQRcVhpt9bQ&usqp=CAU',
-        'https://w0.peakpx.com/wallpaper/755/492/HD-wallpaper-flowering-dewdrops-pretty-cool-blade-of-grass-bubbles-unique.jpg',
-        'https://t4.ftcdn.net/jpg/05/57/57/63/360_F_557576322_am5DuFwdo7GNMlKh3kCfTvKVxDMaKPNL.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7CBkS7_dGnRZvFT6QaEdlcKp1OrB9srTTlLBzytFrmEXJ_Zruwr6lsQvlyX9xOPJpN3o&usqp=CAU',
-        'https://c4.wallpaperflare.com/wallpaper/431/451/684/the-most-beautiful-picture-of-nature-wallpaper-preview.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIim_X8iriwbS7Oj60j4zUDqTpCZxuY3iMKDNXY6O5S_CJll5KecFRv8I-OhFS4bWwhWY&usqp=CAU',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTi1GOR5gX-UMuh1TfpD88SKaKSQ0toLcY3YQ&usqp=CAU',
-        'https://e0.pxfuel.com/wallpapers/192/1/desktop-wallpaper-rose-splash-rose-flower-love-splash-water.jpg',
-        'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022_640.jpg',
-        'https://c4.wallpaperflare.com/wallpaper/736/96/920/beautiful-unicorn-in-forest-fantasy-computer-desktop-wallpapers-hd-2560%C3%971600-wallpaper-preview.jpg',
-        'https://wallpapers.com/images/featured/beautiful-3vau5vtfa3qn7k8v.jpg',
-        'https://e0.pxfuel.com/wallpapers/675/1019/desktop-wallpaper-97405-serene-landcapes-background.jpg',
-        'https://images.pexels.com/photos/1187079/pexels-photo-1187079.jpeg?cs=srgb&dl=pexels-artem-saranin-1187079.jpg&fm=jpg',
-        'https://images.pexels.com/photos/1887624/pexels-photo-1887624.jpeg?cs=srgb&dl=pexels-tobias-bj%C3%B8rkli-1887624.jpg&fm=jpg',
-
-
-    ];
 
     // const renderItem = ({ item, index }) => (
     //     <TouchableOpacity
@@ -206,7 +138,8 @@ const ProfileImages: React.FC<any> = ({ navigation }) => {
                         onPress={() => togglePreviewModal(index)}
                         style={styles.imageContainer}
                     >
-                        <Image source={{ uri: `${Config.BASE_URL}${item.imgUrl}` }} style={styles.image} />
+                        {/* <Image source={{ uri: `${Config.BASE_URL}${item.imgUrl}` }} style={styles.image} /> */}
+                        <Image source={{ uri: `${item.imgUrl}` }} style={styles.image} />
                     </TouchableOpacity>
                 )}
             />
@@ -217,7 +150,8 @@ const ProfileImages: React.FC<any> = ({ navigation }) => {
             >
                 <View style={styles.modalContainer}>
                     <Image
-                        source={{ uri: `${Config.BASE_URL}${image[selectedImageIndex]?.imgUrl}` }}
+                        // source={{ uri: `${Config.BASE_URL}${image[selectedImageIndex]?.imgUrl}` }}
+                        source={{ uri: `${image[selectedImageIndex]?.imgUrl}` }}
                         style={styles.previewImage}
                         resizeMode="contain"
                     />
@@ -225,7 +159,7 @@ const ProfileImages: React.FC<any> = ({ navigation }) => {
                         {/* Your close button icon */}
                         <Image source={images.cross} style={{ height: '100%', width: '100%', tintColor: 'white' }} resizeMode='contain' />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.downloadButton} onPress={() => downloadImage(`${Config.BASE_URL}${image[selectedImageIndex]?.imgUrl}`)}>
+                    <TouchableOpacity style={styles.downloadButton} onPress={() => downloadImage(`${image[selectedImageIndex]?.imgUrl}`)}>
                         {/* Your download button */}
                         
                         <Image source={images.download} style={{ height: '100%', width: '100%' }} resizeMode='contain' />

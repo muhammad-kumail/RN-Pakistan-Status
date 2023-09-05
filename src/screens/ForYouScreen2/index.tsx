@@ -114,8 +114,8 @@ const ForYou2 = () => {
     const videoDownload = async () => {
       setVideoDownloading(true);
       try {
-        const videoUrl = Config.BASE_URL + item.mediaUrl;
-        const downloadDir = RNFS.DownloadDirectoryPath;
+        const videoUrl =  item.mediaUrl;
+        const downloadDir = RNFS.ExternalDirectoryPath;
         const filename = `downloaded-${Date.now()}.mp4`;
         const path = `${downloadDir}/${filename}`;
 
@@ -177,8 +177,8 @@ const ForYou2 = () => {
         const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
 
         // if (permissionStatus === 'granted') {
-        const videoUrl = Config.BASE_URL + item.mediaUrl;
-        const downloadDir = RNFS.DownloadDirectoryPath;
+        const videoUrl =  item.mediaUrl;
+        const downloadDir = RNFS.ExternalDirectoryPath;
         const filename = `downloaded-video-${Date.now()}.mp4`;
         const path = `${downloadDir}/${filename}`;
         try {
@@ -222,9 +222,9 @@ const ForYou2 = () => {
         console.log("whtsapp---");
         const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
 
-        const videoUrl = Config.BASE_URL + item.mediaUrl;
-        const downloadDir = RNFS.DownloadDirectoryPath;
-        const filename = `downloaded-${Date.now()}`;
+        const videoUrl =  item.mediaUrl;
+        const downloadDir = RNFS.ExternalDirectoryPath;
+        const filename = `downloaded-${Date.now()}.mp4`;
         const path = `${downloadDir}/${filename}`;
         try {
           const response = RNFS.downloadFile({
@@ -233,7 +233,7 @@ const ForYou2 = () => {
           });
 
           if (response) {
-            console.log('Image downloaded to:', path);
+            console.log('Video downloaded to:', path);
             try {
               const video = path; // Replace with the actual path to your image
               const shareOptions = {
@@ -243,13 +243,13 @@ const ForYou2 = () => {
                 social: Share.Social.WHATSAPP,
                 showAppsToView: ['whatsapp'],
               };
-              console.log(shareOptions.url, "----")
+              console.log(shareOptions, "----")
 
               await Share.shareSingle(shareOptions);
             } catch (error) {
               console.error('Error sharing image on WhatsApp:', error.message);
             }
-            Alert.alert('Image downloaded successfully!');
+            // Alert.alert('Image downloaded successfully!');
           } else {
             console.error('Image download failed with status:', response);
             Alert.alert('Image download failed!');
@@ -274,7 +274,7 @@ const ForYou2 = () => {
         <StatusBar barStyle={'light-content'} />
 
         <Video
-          source={{ uri: (Config.BASE_URL + item.mediaUrl) }}
+          source={{ uri: ( item.mediaUrl) }}
           style={styles.video}
           resizeMode="contain"
           paused={!isActive || !isFocused}

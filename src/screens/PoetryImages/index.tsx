@@ -13,14 +13,18 @@ import { request } from 'react-native-permissions';
 import Share from 'react-native-share';
 import { getData } from '../../api/Httpservice';
 import Config from '../../utils/config';
+import { useIsFocused } from '@react-navigation/native';
 
 const NUM_COLUMNS = 1;
 
 const PoetryImages: React.FC<any> = ({ navigation }) => {
+    const isFocused = useIsFocused()
     const [imagesArr, setImagesArr] = useState([]);
     useEffect(() => {
-        getImagesData()
-    }, [])
+        if(isFocused){
+            getImagesData()
+        }
+    }, [isFocused])
 
     const getImagesData = async () => {
 
@@ -36,7 +40,7 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
         try {
             // const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
             // if (permissionStatus === PermissionsAndroid.RESULTS.GRANTED) {
-            const downloadDir = RNFS.DownloadDirectoryPath;
+            const downloadDir = RNFS.ExternalDirectoryPath;
             const filename = `downloaded-image-${Date.now()}.jpg`;
             const filePath = `${downloadDir}/${filename}`;
             try {
@@ -67,38 +71,14 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
     };
     const shareImageOnWhatsApp = async (url: any) => {
         try {
-            // const permissionStatus = await PermissionsAndroid.request(
-            //     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE );
-            //     console.log(permissionStatus,"get permission beta");
-            // if (permissionStatus === PermissionsAndroid.RESULTS.GRANTED) {
-            //     console.log('Storage Permission Granted.');
-            //   } else if (permissionStatus === PermissionsAndroid.RESULTS.DENIED) {
-            //     // console.log('Storage Permission Denied.');
-            //     Alert.alert(
-            //         'Storage Permission Required',
-            //         'App needs access to your storage to read files. Please go to app settings and grant permission.',
-            //         [
-            //           { text: 'Cancel', style: 'cancel' },
-            //           { text: 'Open Settings', onPress: openSettings },
-            //         ],
-            //       );
-            //   } else if (permissionStatus === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-            //     console.log('Storage Permission Denied with Never Ask Again.');
-            //     Alert.alert(
-            //       'Storage Permission Required',
-            //       'App needs access to your storage to read files. Please go to app settings and grant permission.',
-            //       [
-            //         { text: 'Cancel', style: 'cancel' },
-            //         { text: 'Open Settings', onPress: openSettings },
-            //       ],
-            //     );
-            //   }
-            // if (permissionStatus === PermissionsAndroid.RESULTS.GRANTED) {
+            const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
 
-            const downloadDir = RNFS.DownloadDirectoryPath;
+            // if (permissionStatus === 'granted') {
+
+            const downloadDir = RNFS.ExternalDirectoryPath;
             const filename = `downloaded-image-${Date.now()}.jpg`;
             const filePath = `${downloadDir}/${filename}`;
-            
+
             try {
                 const response = await RNFS.downloadFile({
                     fromUrl: url,
@@ -116,7 +96,8 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
                             showAppsToView: ['whatsapp'],
                             social: Share.Social.WHATSAPP,
                         };
-                        console.log(shareOptions.url, "----")
+                        console.log(shareOptions, "----")
+
                         // await Share.open(shareOptions);
                         await Share.shareSingle(shareOptions);
                     } catch (error) {
@@ -132,25 +113,24 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
                 Alert.alert('Error downloading image!');
             }
             // } else {
-            //     console.log('Permission denied');
+            //   console.log('Permission denied');
             // }
         } catch (error) {
             console.error('Error requesting permission:', error);
         }
-        // try {
-        // const image = url; // Replace with the actual path to your image
-        // const shareOptions = {
-        //     title: 'Share via WhatsApp',
-        //     url: `file://${image}`,
-        //     failOnCancel: false,
-        //     showAppsToView: ['whatsapp'],
-        // };
-        // console.log(shareOptions.url,"----")
 
-        // await Share.open(shareOptions);
-        // } catch (error) {
-        // console.error('Error sharing image on WhatsApp:', error.message);
-        // }
+        // const whatsappUrl = 'whatsapp://';
+        // // Attempt to open WhatsApp
+        // Linking.canOpenURL(whatsappUrl).then((supported) => {
+        //     if (supported) {
+        //         return Linking.openURL(whatsappUrl);
+        //     } else {
+        //         console.error("WhatsApp is not installed on this device.");
+        //     }
+        // }).catch((error) => {
+        //     console.error("Error opening WhatsApp:", error);
+        // });
+
     };
     return (
         <SafeAreaView
@@ -175,17 +155,18 @@ const PoetryImages: React.FC<any> = ({ navigation }) => {
                                 // onPress={() => togglePreviewModal(index)}
                                 style={styles.imageContainer}
                             >
-                                <Image source={{ uri: `${Config.BASE_URL}${item?.imgUrl}` }} style={styles.image} resizeMode='cover' />
+                                {/* <Image source={{ uri: `${Config.BASE_URL}${item?.imgUrl}` }} style={styles.image} resizeMode='cover' /> */}
+                                <Image source={{ uri: `${item?.imgUrl}` }} style={styles.image} resizeMode='cover' />
                             </TouchableOpacity>
                         </View>
                         <View style={{
                             height: hp(13), flexDirection: 'column',
                             position: 'absolute', width: wp(100), alignItems: 'flex-end', paddingRight: wp(7), marginTop: wp(21)
                         }}>
-                            <TouchableOpacity onPress={() => shareImageOnWhatsApp(`${Config.BASE_URL}${item?.imgUrl}`)} style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }}>
+                            <TouchableOpacity onPress={() => shareImageOnWhatsApp(`${item?.imgUrl}`)} style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }}>
                                 <Image source={images.whatsapp} style={{ height: wp(6), width: wp(6) }} resizeMode='contain' />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => downloadImage(`${Config.BASE_URL}${item?.imgUrl}`)} style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }} >
+                            <TouchableOpacity onPress={() => downloadImage(`${item?.imgUrl}`)} style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }} >
                                 <Image source={images.downarrow} style={{ height: wp(6), width: wp(6) }} resizeMode='contain' />
                             </TouchableOpacity>
                         </View>

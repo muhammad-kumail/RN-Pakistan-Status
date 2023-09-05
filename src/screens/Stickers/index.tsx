@@ -12,57 +12,15 @@ import { request } from 'react-native-permissions';
 import { getData } from '../../api/Httpservice';
 import Config from '../../utils/config';
 import { Linking } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 const Stickers: React.FC<any> = ({ navigation }) => {
-  // const data = [
-  //   {
-  //     id: 1,
-  //     img: images.splash2Img,
-  //   },
-  //   {
-  //     id: 2,
-  //     img: images.catcover,
-  //   },
-  //   {
-  //     id: 3,
-  //     img: images.catcover,
-  //   },
-  //   {
-  //     id: 4,
-  //     img: images.splash2Img,
-  //   },
-  //   {
-  //     id: 5,
-  //     img: images.splash2Img,
-  //   },
-  //   {
-  //     id: 6,
-  //     img: images.catcover,
-  //   },
-  //   {
-  //     id: 7,
-  //     img: images.catcover,
-  //   },
-  //   {
-  //     id: 8,
-  //     img: images.splash2Img,
-  //   },
-  //   {
-  //     id: 9,
-  //     img: images.splash2Img,
-  //   },
-  //   {
-  //     id: 10,
-  //     img: images.catcover,
-  //   },
-  //   {
-  //     id: 11,
-  //     img: images.catcover,
-  //   },
-  // ];
+  const isFocused = useIsFocused()
   const [data, setData] = useState([]);
   useEffect(() => {
-    getStickersData()
-  }, [])
+    if(isFocused){
+      getStickersData()
+    }
+  }, [isFocused])
 
   const getStickersData = async () => {
 
@@ -70,7 +28,7 @@ const Stickers: React.FC<any> = ({ navigation }) => {
       setData(res.data)
       console.log("My Images data", res)
     }).catch((error) => {
-      console.log("Error", error.message)
+      console.log("Error => ", error.message)
     })
   }
   const downloadImage = async (imageUrl: string) => {
@@ -80,7 +38,7 @@ const Stickers: React.FC<any> = ({ navigation }) => {
 
       if (permissionStatus === 'granted') {
 
-        const downloadDir = RNFS.DownloadDirectoryPath;
+        const downloadDir = RNFS.ExternalDirectoryPath;
         const filename = `downloaded-image-${Date.now()}.jpg`;
         const filePath = `${downloadDir}/${filename}`;
 
@@ -112,9 +70,9 @@ const Stickers: React.FC<any> = ({ navigation }) => {
     try {
       const permissionStatus = await request('android.permission.WRITE_EXTERNAL_STORAGE');
 
-      if (permissionStatus === 'granted') {
+      // if (permissionStatus === 'granted') {
 
-        const downloadDir = RNFS.DownloadDirectoryPath;
+        const downloadDir = RNFS.ExternalDirectoryPath;
         const filename = `downloaded-image-${Date.now()}.jpg`;
         const filePath = `${downloadDir}/${filename}`;
 
@@ -135,7 +93,7 @@ const Stickers: React.FC<any> = ({ navigation }) => {
                 showAppsToView: ['whatsapp'],
                 social: Share.Social.WHATSAPP,
               };
-              console.log(shareOptions.url, "----")
+              console.log(shareOptions, "----")
 
               // await Share.open(shareOptions);
               await Share.shareSingle(shareOptions);
@@ -151,9 +109,9 @@ const Stickers: React.FC<any> = ({ navigation }) => {
           console.error('Error downloading image:', error);
           Alert.alert('Error downloading image!');
         }
-      } else {
-        console.log('Permission denied');
-      }
+      // } else {
+      //   console.log('Permission denied');
+      // }
     } catch (error) {
       console.error('Error requesting permission:', error);
     }
@@ -189,13 +147,14 @@ const Stickers: React.FC<any> = ({ navigation }) => {
           return (
             <View style={[styles.card, { width: wp(45), height: hp(20), marginLeft: wp(1) }]}>
               <View style={{ height: hp(16) }}>
-                <Image source={{ uri: `${Config.BASE_URL}${item?.imgUrl}` }} style={styles.image} />
+                {/* <Image source={{ uri: `${Config.BASE_URL}${item?.imgUrl}` }} style={styles.image} /> */}
+                <Image source={{ uri: `${item?.imgUrl}` }} style={styles.image} />
               </View>
               <View style={{ height: hp(4), backgroundColor: 'red', flexDirection: 'row' }}>
-                <TouchableOpacity style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }} onPress={() => downloadImage(`${Config.BASE_URL}${item?.imgUrl}`)}>
+                <TouchableOpacity style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }} onPress={() => downloadImage(`${item?.imgUrl}`)}>
                   <Image source={images.downarrow} style={{ height: hp(2), width: wp(4) }} resizeMode='contain' />
                 </TouchableOpacity>
-                <TouchableOpacity style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }} onPress={() => shareImageOnWhatsApp(`${Config.BASE_URL}${item?.imgUrl}`)}>
+                <TouchableOpacity style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center', }} onPress={() => shareImageOnWhatsApp(`${item?.imgUrl}`)}>
                   <Image source={images.whatsapp} style={{ height: hp(2), width: wp(4) }} resizeMode='contain' />
                 </TouchableOpacity>
               </View>
