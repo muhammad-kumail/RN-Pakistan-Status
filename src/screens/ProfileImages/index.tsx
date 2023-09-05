@@ -30,7 +30,7 @@ const ProfileImages: React.FC<any> = ({ navigation }) => {
 
             if (permissionStatus === 'granted') {
 
-                const downloadDir = RNFS.DownloadDirectoryPath;
+                const downloadDir = RNFS.ExternalDirectoryPath;
                 const filename = `downloaded-image-${Date.now()}.jpg`;
                 const filePath = `${downloadDir}/${filename}`;
 

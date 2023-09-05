@@ -108,7 +108,7 @@ const ForYou = () => {
           // }
           // setVideoDownloading(true);
           const videoUrl = Config.BASE_URL + item.mediaUrl;
-          const downloadDir = RNFS.DownloadDirectoryPath;
+          const downloadDir = RNFS.ExternalDirectoryPath;
           const filename = `downloaded-video-${Date.now()}.mp4`;
           const path = `${downloadDir}/${filename}`;
           // const path = RNFS.DocumentDirectoryPath + `/` + Math.floor(date.getTime() + date.getSeconds() / 2) + '.mp4';
@@ -179,7 +179,7 @@ const ForYou = () => {
 
         // if (permissionStatus === 'granted') {
           const videoUrl = Config.BASE_URL + item.mediaUrl;
-          const downloadDir = RNFS.DownloadDirectoryPath;
+          const downloadDir = RNFS.ExternalDirectoryPath;
           const filename = `downloaded-video-${Date.now()}.mp4`;
           const path = `${downloadDir}/${filename}`;
           try {
@@ -205,7 +205,7 @@ const ForYou = () => {
               } catch (error) {
                 console.error('Error sharing image on WhatsApp:', error.message);
               }
-              Alert.alert('Image downloaded successfully!');
+              // Alert.alert('Image downloaded successfully!');
             } else {
               console.error('Image download failed with status:', response);
               Alert.alert('Image download failed!');
@@ -229,7 +229,7 @@ const ForYou = () => {
 
         // if (permissionStatus === 'granted') {
           const videoUrl = Config.BASE_URL + item.mediaUrl;
-          const downloadDir = RNFS.DownloadDirectoryPath;
+          const downloadDir = RNFS.ExternalDirectoryPath;
           const filename = `downloaded-video-${Date.now()}.mp4`;
           const path = `${downloadDir}/${filename}`;
           try {
@@ -255,7 +255,7 @@ const ForYou = () => {
               } catch (error) {
                 console.error('Error sharing image on WhatsApp:', error.message);
               }
-              Alert.alert('Image downloaded successfully!');
+              // Alert.alert('Image downloaded successfully!');
             } else {
               console.error('Image download failed with status:', response);
               Alert.alert('Image download failed!');

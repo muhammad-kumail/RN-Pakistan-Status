@@ -162,7 +162,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
 
             if (permissionStatus === 'granted') {
                 const audioUrl = url;
-                const downloadDir = RNFS.DownloadDirectoryPath;
+                const downloadDir = RNFS.ExternalDirectoryPath;
                 const filename = `downloaded-audio-${Date.now()}.mp4`;
                 const path = `${downloadDir}/${filename}`;
                 try {
@@ -189,7 +189,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
                         } catch (error) {
                             console.error('Error sharing image on WhatsApp:', error.message);
                         }
-                        Alert.alert('Image downloaded successfully!');
+                        // Alert.alert('Image downloaded successfully!');
                     } else {
                         console.error('Image download failed with status:', response);
                         Alert.alert('Image download failed!');
@@ -216,7 +216,7 @@ const Audios: React.FC<any> = ({ navigation }) => {
             if (permissionStatus === 'granted') {
 
                 // const audioUrl = Config.BASE_URL + url;
-                const downloadDir = RNFS.DownloadDirectoryPath;
+                const downloadDir = RNFS.ExternalDirectoryPath;
                 const filename = `downloaded-audio-${Date.now()}.mp4`;
                 const path = `${downloadDir}/${filename}`;
                 // const path = RNFS.DocumentDirectoryPath + `/` + Math.floor(date.getTime() + date.getSeconds() / 2) + '.mp4';

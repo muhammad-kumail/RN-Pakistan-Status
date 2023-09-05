@@ -204,7 +204,7 @@ const ForYou2 = () => {
             } catch (error) {
               console.error('Error sharing image on WhatsApp:', error);
             }
-            Alert.alert('Image downloaded successfully!');
+            // Alert.alert('Image downloaded successfully!');
           } else {
             console.error('Image download failed with status:', response);
             Alert.alert('Image download failed!');
